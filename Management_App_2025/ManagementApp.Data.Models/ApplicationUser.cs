@@ -1,18 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+using static ManagementApp.Common.EntityValidationConstants.UserValidationConstants;
 
 namespace ManagementApp.Data.Models
 {
     public class ApplicationUser
     {
         [Required]
-        //[MaxLength(UserFirstNameMaxLength)]
+        [MaxLength(UserFirstNameMaxLength)]
         [Comment("First name of the user")]
         public string FirstName { get; set; } = null!;
 
         [Required]
-        //[MaxLength(UserLastNameMaxLength)]
+        [MaxLength(UserLastNameMaxLength)]
         [Comment("Last name of the user")]
         public string LastName { get; set; } = null!;
 
@@ -24,8 +26,8 @@ namespace ManagementApp.Data.Models
         public JobTitle JobTitle { get; set; } = null!;
 
         [Required]
-        //entity validation
-        public int Salary { get; set; }
+        [Range(SalaryMinAmount, SalaryMaxAmount)]
+        public decimal Salary { get; set; }
 
         [Required]
         public Guid DepartmentId { get; set; }

@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 using Microsoft.EntityFrameworkCore;
 
+using static ManagementApp.Common.EntityValidationConstants.DepartmentValidationConstants;
+
 namespace ManagementApp.Data.Models
 {
     public class Department
@@ -11,7 +13,7 @@ namespace ManagementApp.Data.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        //[MaxLength(DepartmentNameMaxLength)]
+        [MaxLength(DepartmentNameMaxLength)]
         [Comment("Name of the department")]
         public string Name { get; set; } = null!;
 

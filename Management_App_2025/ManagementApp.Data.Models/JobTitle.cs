@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+
+using static ManagementApp.Common.EntityValidationConstants.JobTitleValidationConstants;
 
 namespace ManagementApp.Data.Models
 {
@@ -9,7 +11,7 @@ namespace ManagementApp.Data.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        //[MaxLength(JobTitleNameMaxLength)]
+        [MaxLength(JobTitleNameMaxLength)]
         [Comment("Name of the job title")]
         public string Name { get; set; } = null!;
 
