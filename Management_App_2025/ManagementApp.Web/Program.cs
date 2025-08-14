@@ -80,6 +80,9 @@ namespace ManagementApp.Web
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
+            // SEED ROLES
+            app.SeedRoles();
+
             // APPLY MIGRATIONS
             app.ApplyMigrations();
 
