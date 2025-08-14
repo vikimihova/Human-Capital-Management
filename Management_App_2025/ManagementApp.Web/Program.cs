@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 using ManagementApp.Data;
 using ManagementApp.Data.Models;
+using ManagementApp.Infrastructure;
 
 namespace ManagementApp.Web
 {
@@ -78,6 +80,10 @@ namespace ManagementApp.Web
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
+            // APPLY MIGRATIONS
+            app.ApplyMigrations();
+
+            // RUN APPLICATION
             app.Run();
         }
     }
