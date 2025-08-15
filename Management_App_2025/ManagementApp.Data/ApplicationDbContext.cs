@@ -6,6 +6,7 @@ using ManagementApp.Data.Models;
 using ManagementApp.Data.DataProcessor;
 using ManagementApp.Data.DataProcessor.ImportDtos;
 
+using static ManagementApp.Common.ApplicationConstants;
 using static ManagementApp.Common.ErrorMessages.Seed;
 
 namespace ManagementApp.Data
@@ -108,9 +109,37 @@ namespace ManagementApp.Data
             }
         }
 
-        public static List<UserImportDto> GenerateUserDtosList()
+        public List<UserImportDto> GenerateUserDtosList()
         {
             UserImportDto[] userImportDtos = Deserializer.GenerateUserImportDtos();
+
+            foreach (var userDto in userImportDtos)
+            {
+                Department department = this.Departments
+                    .AsNoTracking()
+                    .FirstOrDefault(d => d.Name == userDto.Department)!;
+
+                userDto.DepartmentId = department.Id;
+
+                JobTitle jobTitle = this.JobTitles
+                    .AsNoTracking()
+                    .FirstOrDefault(j => j.Name == userDto.JobTitle)!;
+
+                userDto.JobTitleId = jobTitle.Id;
+
+                if (userDto.Role == "E")
+                {
+                    userDto.Role = EmployeeRoleName;
+                }
+                else if (userDto.Role == "M")
+                {
+                    userDto.Role = ManagerRoleName;
+                }
+                else if (userDto.Role == "A")
+                {
+                    userDto.Role = AdminRoleName;
+                }
+            }
 
             return userImportDtos.ToList();
         }

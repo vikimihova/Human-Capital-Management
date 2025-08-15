@@ -83,6 +83,9 @@ namespace ManagementApp.Web
             // SEED ROLES
             app.SeedRoles();
 
+            // SEED DATABASE
+            app.SeedDatabase();
+
             // APPLY MIGRATIONS
             app.ApplyMigrations();
 
