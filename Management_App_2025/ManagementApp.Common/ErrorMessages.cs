@@ -1,4 +1,6 @@
-﻿namespace ManagementApp.Common
+﻿using System.Globalization;
+
+namespace ManagementApp.Common
 {
     public static class ErrorMessages
     {
@@ -11,6 +13,11 @@
         public static class Services
         {
             public const string ErrorTryingToObtainService = "Service for {0} cannot be obtained!";
+        }
+
+        public static class Seed
+        {
+            public const string ErrorWhileSeeding = "An error occurred: {0}";
         }
     }
 }
