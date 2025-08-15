@@ -48,6 +48,11 @@ namespace ManagementApp.Web
             .AddSignInManager<SignInManager<ApplicationUser>>()
             .AddUserManager<UserManager<ApplicationUser>>();
 
+            // Add repositories for each entity (repository pattern) except for ApplicationUser (UserManager and SignInManager instead)
+            builder.Services.RegisterRepositories(typeof(ApplicationUser).Assembly);
+
+            // Add services for controllers
+
             // Add other services
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
