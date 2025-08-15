@@ -39,9 +39,15 @@ namespace ManagementApp.Data.DataProcessor.ImportDtos
         public string JobTitle { get; set; } = null!;
 
         [Required]
+        public Guid JobTitleId { get; set; }
+
+        [Required]
         [MinLength(DepartmentNameMinLength)]
         [MaxLength(DepartmentNameMaxLength)]
         public string Department { get; set; } = null!;
+
+        [Required]
+        public Guid DepartmentId { get; set; }
 
         [Required]
         [Range(SalaryMinAmount, SalaryMaxAmount)]
@@ -49,7 +55,6 @@ namespace ManagementApp.Data.DataProcessor.ImportDtos
 
         [Required]
         [MinLength(1)]
-        [MaxLength(1)]
         public string Role { get; set; } = null!;
     }
 }
