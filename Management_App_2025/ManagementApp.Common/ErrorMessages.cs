@@ -19,5 +19,10 @@ namespace ManagementApp.Common
         {
             public const string ErrorWhileSeeding = "An error occurred: {0}";
         }
+
+        public static class UserCreation
+        {
+            public const string ErrorWhileRegisteringUser = "Error occurred while registering {0} user!";
+        }
     }
 }
