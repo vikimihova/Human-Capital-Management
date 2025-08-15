@@ -1,0 +1,156 @@
+[
+  {
+    "firstName": "Tony",
+    "lastName": "Robbins",
+    "username": "tonyboy",
+    "password": "success123",
+    "email": "tony.robbins@gmail.com",
+    "salary": 8000,
+    "jobTitle": "Sales Representative",
+    "department": "Sales",
+    "role": "E"
+  },
+  {
+    "firstName": "Lewis",
+    "lastName": "Hamilton",
+    "username": "racer",
+    "password": "finish123",
+    "email": "lewis.hamilton@gmail.com",
+    "salary": 3000,
+    "jobTitle": "Chauffeur",
+    "department": "Logistics",
+    "role": "E"
+  },
+  {
+    "firstName": "Maria",
+    "lastName": "Max",
+    "username": "enginex",
+    "password": "abv123",
+    "email": "maria.max@gmail.com",
+    "salary": 5500,
+    "jobTitle": "Engineer",
+    "department": "Engineering",
+    "role": "E"
+  },
+  {
+    "firstName": "Lucille",
+    "lastName": "Ball",
+    "username": "ilovelucy",
+    "password": "abv123",
+    "email": "lucille.ball@gmail.com",
+    "salary": 5800,
+    "jobTitle": "Marketing Expert",
+    "department": "Marketing",
+    "role": "E"
+  },
+  {
+    "firstName": "Alain",
+    "lastName": "de Botton",
+    "username": "schooloflife",
+    "password": "abv123",
+    "email": "alain.debotton@gmail.com",
+    "salary": 7500,
+    "jobTitle": "Marketing Expert",
+    "department": "Marketing",
+    "role": "E"
+  },
+  {
+    "firstName": "Amanda",
+    "lastName": "Knab",
+    "username": "electrica",
+    "password": "abv123",
+    "email": "amanda.knab@gmail.com",
+    "salary": 4350,
+    "jobTitle": "Illustrator",
+    "department": "Marketing",
+    "role": "E"
+  },
+  {
+    "firstName": "Michael",
+    "lastName": "Cane",
+    "username": "mike",
+    "password": "abv123",
+    "email": "michael.cane@gmail.com",
+    "salary": 6500,
+    "jobTitle": "Sales Expert",
+    "department": "Sales",
+    "role": "E"
+  },
+  {
+    "firstName": "Jerry",
+    "lastName": "McGuire",
+    "username": "tomcat",
+    "password": "abv123",
+    "email": "jerry.mcguire@gmail.com",
+    "salary": 2500,
+    "jobTitle": "Junior Salesperson",
+    "department": "Sales",
+    "role": "E"
+  },
+  {
+    "firstName": "Ellie",
+    "lastName": "Arroway",
+    "username": "ellie",
+    "password": "abv123",
+    "email": "ellie.arroway@gmail.com",
+    "salary": 2500,
+    "jobTitle": "Junior Engineer",
+    "department": "Engineering",
+    "role": "E"
+  },
+  {
+    "firstName": "Carsten",
+    "lastName": "Janker",
+    "username": "justcarsten",
+    "password": "abv123",
+    "email": "carsten.janker@gmail.com",
+    "salary": 3500,
+    "jobTitle": "Engineer",
+    "department": "Engineering",
+    "role": "E"
+  },
+  {
+    "firstName": "Ernest",
+    "lastName": "Wilde",
+    "username": "ernest",
+    "password": "abv123",
+    "email": "jack.wilde@gmail.com",
+    "salary": 9500,
+    "jobTitle": "Project Manager",
+    "department": "Marketing",
+    "role": "M"
+  },
+  {
+    "firstName": "Kathleen",
+    "lastName": "Kelly",
+    "username": "shopgirl",
+    "password": "abv123",
+    "email": "kathleen.kelly@gmail.com",
+    "salary": 10000,
+    "jobTitle": "Sales Manager",
+    "department": "Sales",
+    "role": "M"
+  },
+  {
+    "firstName": "Tony",
+    "lastName": "Stark",
+    "username": "ironman",
+    "password": "pepper123",
+    "email": "tony.stark@gmail.com",
+    "salary": 10000,
+    "jobTitle": "Product Manager",
+    "department": "Engineering",
+    "role": "M"
+  },
+  {
+    "firstName": "Armin",
+    "lastName": "Adams",
+    "username": "admin",
+    "password": "admin123",
+    "email": "armin.adams@gmail.com",
+    "salary": 5000,
+    "jobTitle": "Human Resource Admin",
+    "department": "Human Resources",
+    "role": "A"
+  }
+]
