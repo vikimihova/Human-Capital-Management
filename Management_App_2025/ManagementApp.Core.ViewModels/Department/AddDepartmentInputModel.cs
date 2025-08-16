@@ -4,7 +4,7 @@ using static ManagementApp.Common.EntityValidationConstants.DepartmentValidation
 
 namespace ManagementApp.Core.ViewModels.Department
 {
-    public class CreateDepartmentInputModel
+    public class AddDepartmentInputModel
     {
         [Required]
         [MinLength(DepartmentNameMinLength)]
