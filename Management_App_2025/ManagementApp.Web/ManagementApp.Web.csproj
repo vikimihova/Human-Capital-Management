@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ManagementApp.Common\ManagementApp.Common.csproj" />
+    <ProjectReference Include="..\ManagementApp.Core.Services\ManagementApp.Core.Services.csproj" />
     <ProjectReference Include="..\ManagementApp.Data.Models\ManagementApp.Data.Models.csproj" />
     <ProjectReference Include="..\ManagementApp.Data\ManagementApp.Data.csproj" />
     <ProjectReference Include="..\ManagementApp.Infrastructure\ManagementApp.Infrastructure.csproj" />

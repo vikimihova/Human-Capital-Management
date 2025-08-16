@@ -1,8 +1,11 @@
-﻿using ManagementApp.Data.Models;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+
+using ManagementApp.Data.Models;
 using ManagementApp.Data.Repository;
 using ManagementApp.Data.Repository.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+
+using static ManagementApp.Common.ErrorMessages.Services;
 
 namespace ManagementApp.Infrastructure
 {
@@ -52,6 +55,41 @@ namespace ManagementApp.Infrastructure
 
                     // add to services
                     services.AddScoped(repositoryInterface, repositoryInstanceType);
+                }
+            }
+        }
+
+        public static void RegisterUserDefinedServices(this IServiceCollection services, Assembly serviceAssembly)
+        {
+            // get all interface types
+            Type[] serviceInterfaceTypes = serviceAssembly
+                .GetTypes()
+                .Where(t => t.IsInterface)
+                .ToArray();
+
+            // get all service types
+            Type[] serviceTypes = serviceAssembly
+                .GetTypes()
+                .Where(t => !t.IsInterface && !t.IsAbstract &&
+                        t.Name.ToLower().EndsWith("service"))
+                .ToArray();
+
+            if (serviceInterfaceTypes.Any())
+            {
+                foreach (Type serviceInterfaceType in serviceInterfaceTypes)
+                {
+                    // find the service corresponding to the service interface
+                    Type? serviceType = serviceTypes
+                        .SingleOrDefault(t => "i" + t.Name.ToLower() == serviceInterfaceType.Name.ToLower());
+
+                    // no corresponding service for the service interface
+                    if (serviceType == null)
+                    {
+                        throw new NullReferenceException(String.Format(ErrorTryingToObtainServiceType, serviceInterfaceType.Name));
+                    }
+
+                    // register service interface and service
+                    services.AddScoped(serviceInterfaceType, serviceType);
                 }
             }
         }

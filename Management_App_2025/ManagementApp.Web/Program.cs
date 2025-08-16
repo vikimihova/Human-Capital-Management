@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ManagementApp.Data;
 using ManagementApp.Data.Models;
 using ManagementApp.Infrastructure;
+using ManagementApp.Core.Services.Interfaces;
 
 namespace ManagementApp.Web
 {
@@ -67,6 +68,7 @@ namespace ManagementApp.Web
             builder.Services.RegisterRepositories(typeof(ApplicationUser).Assembly);
 
             // Add services for controllers
+            builder.Services.RegisterUserDefinedServices(typeof(IBaseService).Assembly);
 
             // Add other services
             builder.Services.AddControllersWithViews();

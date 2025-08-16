@@ -13,6 +13,7 @@ namespace ManagementApp.Common
         public static class Services
         {
             public const string ErrorTryingToObtainService = "Service for {0} cannot be obtained!";
+            public const string ErrorTryingToObtainServiceType = "Service type could not be obtained for the service {0}";
         }
 
         public static class Seed
