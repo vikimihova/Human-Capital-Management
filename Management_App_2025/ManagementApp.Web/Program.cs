@@ -48,6 +48,21 @@ namespace ManagementApp.Web
             .AddSignInManager<SignInManager<ApplicationUser>>()
             .AddUserManager<UserManager<ApplicationUser>>();
 
+            // Configure application cookie
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.LoginPath = "/Identity/Account/Login";
+            });
+
+            // Mark cookies with secure attribute (cookies sent only over HTTPS)
+            builder.Services.AddAntiforgery(options =>
+            {
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.HeaderName = "X-CSRF-TOKEN";
+            });
+
             // Add repositories for each entity (repository pattern) except for ApplicationUser (UserManager and SignInManager instead)
             builder.Services.RegisterRepositories(typeof(ApplicationUser).Assembly);
 
@@ -79,6 +94,8 @@ namespace ManagementApp.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCookiePolicy();
 
             app.MapControllerRoute(
                 name: "default",
