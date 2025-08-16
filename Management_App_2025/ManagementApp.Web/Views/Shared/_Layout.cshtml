@@ -8,40 +8,49 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ManagementApp.Web.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ManagementApp.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+<body>      
+
+    <div class="d-flex" style="height: 100vh;">
+
+        <!-- Sidebar -->
+        <nav class="d-flex flex-column position-relative" id="sidebar-wrapper" style="width: 300px; height: 100vh; background-color: yellow; position: relative; z-index: 10;">
+            <div class="sidebar-heading d-flex justify-content-center align-items-center" style="padding-top: 40px; padding-bottom: 20px;">
+                <a class="d-flex justify-content-center align-items-center w-100" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.png" alt="Logo" style="height: 130px;">
+                </a>
+            </div>
+            <div class="list-group list-group-flush d-flex flex-column align-items-center">
+                <a class="list-group-item list-group-item-action bg-transparent text-center w-75" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                
+            </div>
+
+            
+            <div class="flex-grow-1"></div>
+
+            <div class="px-3 pb-3 text-center">
+                <partial name="_LoginPartial" />
             </div>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+                
+        <!-- Page Content -->
+        <div id="page-content-wrapper" class="flex-grow-1 d-flex flex-column" style="height: 100vh;">
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - ManagementApp.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <!-- Blurred Background Layer -->
+            <div class="blurred-bg"></div>
+
+            <!-- Centered Foreground Content -->
+            <main role="main" class="flex-grow-1 d-flex justify-content-center align-items-center position-relative" style="z-index: 2;">
+                <div class="content-box text-center">
+                    @RenderBody()
+                </div>
+            </main>
         </div>
-    </footer>
+
+    </div>    
+
+    @* <footer class="border-top footer text-muted">
+        <div class="container"></div>
+    </footer> *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
