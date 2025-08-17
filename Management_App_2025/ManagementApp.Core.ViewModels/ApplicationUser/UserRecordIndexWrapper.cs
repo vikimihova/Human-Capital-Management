@@ -5,10 +5,16 @@ namespace ManagementApp.Core.ViewModels.ApplicationUser
 {
     public class UserRecordIndexWrapper
     {
-        IEnumerable<UserRecordViewModel> users { get; set; } = new List<UserRecordViewModel>();
+        public ICollection<UserRecordViewModel> Users { get; set; } = new List<UserRecordViewModel>();
 
-        ICollection<SelectJobTitleViewModel> jobTitles { get; set; } = new List<SelectJobTitleViewModel>();
+        public IEnumerable<SelectJobTitleViewModel> JobTitles { get; set; } = new List<SelectJobTitleViewModel>();
 
-        ICollection<SelectDepartmentViewModel> departments { get; set; } = new List<SelectDepartmentViewModel>();
+        public IEnumerable<SelectDepartmentViewModel> Departments { get; set; } = new List<SelectDepartmentViewModel>();
+
+        public string? SearchInput { get; set; }
+
+        public string? DepartmentFilter { get; set; }
+
+        public string? JobTitleFilter { get; set; }
     }
 }
