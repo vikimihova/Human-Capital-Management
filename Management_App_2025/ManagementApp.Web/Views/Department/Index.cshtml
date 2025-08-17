@@ -8,7 +8,7 @@
 <div class="departments-container p-3 bg-white rounded shadow-sm">
 	<!-- Add Department Button Row -->
 	<div class="d-flex justify-content-end">
-		<a class="btn btn-custom btn-outline-dark"
+		<a class="btn btn-add btn-outline-dark"
 		   style="height: 40px; width: 200px;" 
 		   asp-action="Add" method="get">Add Department</a>
 	</div>
@@ -21,7 +21,7 @@
 		<table class="table table-striped table-bordered align-middle">
 			<thead class="table-light sticky-top">
 				<tr>
-					<th>Name</th>
+					<th>Department</th>
 					<th>Employees Count</th>
 					<th class="text-center">Actions</th>
 				</tr>
@@ -35,8 +35,8 @@
 						<td class="text-center">
 							@if (department.IsDeleted == true)
 							{
-								<a class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
-								   asp-action="Include" method="post" asp-route-id="@department.Id">Include</a>
+								<a class="btn btn-include btn-outline-dark" style="height: 40px; width: 100px;"
+								   asp-action="Include" method="get" asp-route-id="@department.Id">Include</a>
 							}
 							else
 							{
@@ -45,8 +45,8 @@
 
 								@if(department.EmployeesCount == 0)
 								{
-									<a class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
-									   asp-action="Delete" method="post" asp-route-id="@department.Id">Delete</a>
+									<a class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px;"
+									   asp-action="Delete" method="get" asp-route-id="@department.Id">Delete</a>
 								}
 							}													
 						</td>

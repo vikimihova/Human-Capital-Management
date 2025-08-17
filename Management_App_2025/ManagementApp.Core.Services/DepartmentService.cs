@@ -64,7 +64,7 @@ namespace ManagementApp.Core.Services
             Department? department = await this.departmentRepository
                 .GetAllAttached()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(d => d.Name == model.Name);
+                .FirstOrDefaultAsync(d => d.Id.ToString() == model.Id);
 
             if (department == null)
             {
@@ -165,6 +165,7 @@ namespace ManagementApp.Core.Services
 
             EditDepartmentInputModel model = new EditDepartmentInputModel()
             {
+                Id = id,
                 Name = department.Name
             };
 
