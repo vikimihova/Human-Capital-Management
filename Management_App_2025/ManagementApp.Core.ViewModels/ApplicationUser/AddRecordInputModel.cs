@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ManagementApp.Core.ViewModels.Department;
+using ManagementApp.Core.ViewModels.JobTitle;
+using System.ComponentModel.DataAnnotations;
 
 using static ManagementApp.Common.EntityValidationConstants.UserValidationConstants;
 
@@ -19,8 +21,7 @@ namespace ManagementApp.Core.ViewModels.ApplicationUser
         [Required]
         public string JobTitleId { get; set; } = null!;
 
-        [Required]
-        public string JobTitle { get; set; } = null!;
+        public IEnumerable<SelectJobTitleViewModel> JobTitles { get; set; } = new List<SelectJobTitleViewModel>();
 
         [Required]
         [Range(SalaryMinAmount, SalaryMaxAmount)]
@@ -29,7 +30,6 @@ namespace ManagementApp.Core.ViewModels.ApplicationUser
         [Required]
         public string DepartmentId { get; set; } = null!;
 
-        [Required]
-        public string Department { get; set; } = null!;
+        public IEnumerable<SelectDepartmentViewModel> Departments { get; set; } = new List<SelectDepartmentViewModel>();
     }
 }
