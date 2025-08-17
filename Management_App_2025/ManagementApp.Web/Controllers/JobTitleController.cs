@@ -100,7 +100,7 @@ namespace ManagementApp.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
             bool result;
@@ -122,7 +122,7 @@ namespace ManagementApp.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Include(string id)
         {
             bool result;

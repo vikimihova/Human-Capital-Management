@@ -65,7 +65,7 @@ namespace ManagementApp.Core.Services
             JobTitle? jobTitle = await this.jobTitleRepository
                 .GetAllAttached()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(j => j.Name == model.Name);
+                .FirstOrDefaultAsync(j => j.Id.ToString() == model.Id);
 
             if (jobTitle == null)
             {
@@ -166,6 +166,7 @@ namespace ManagementApp.Core.Services
 
             EditJobTitleInputModel model = new EditJobTitleInputModel()
             {
+                Id = id,
                 Name = jobTitle.Name
             };
 

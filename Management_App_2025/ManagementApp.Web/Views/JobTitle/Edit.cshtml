@@ -1,0 +1,17 @@
+﻿@using ManagementApp.Core.ViewModels.JobTitle
+@model EditJobTitleInputModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">
+            <form asp-action="Edit" method="post" asp-antiforgery="true">
+                <div>
+                    <label for="Title">Edit Job Title</label>
+                    <input asp-for="@Model.Name" class="form-control" />
+                    <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-custom mt-2">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
