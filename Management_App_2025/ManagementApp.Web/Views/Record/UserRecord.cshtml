@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+
+@using ManagementApp.Core.ViewModels.ApplicationUser
+
+@model UserRecordViewModel
+
+@{
+    ViewData["Title"] = "User Record";
+}
+
+<div class="user-record-box p-4 rounded shadow-sm bg-light text-dark">
+    <!-- Name Row -->
+    <h2 class="display-6 fw-bold mb-1 text-center">
+        @Model.FirstName @Model.LastName
+    </h2>
+
+    <!-- Job Title -->
+    <h5 class="text-muted mb-4 text-center">
+        @Model.JobTitle
+    </h5>
+
+    <!-- Additional Info -->
+    <div class="d-flex flex-column gap-2 align-items-center">
+        <div class="info-item">
+            <strong>Department:</strong> @Model.Department
+        </div>
+        <div class="info-item">
+            <strong>Salary:</strong> @Model.Salary.ToString("F2")
+        </div>
+        <div class="info-item">
+            <strong>Roles:</strong> @string.Join(", ", Model.RoleNames)
+        </div>
+    </div>
+</div>

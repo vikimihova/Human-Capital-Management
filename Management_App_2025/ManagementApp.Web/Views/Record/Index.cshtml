@@ -1,0 +1,107 @@
+﻿@using ManagementApp.Core.ViewModels.ApplicationUser
+@using static ManagementApp.Common.ApplicationConstants;
+@model UserRecordIndexWrapper
+
+@{
+	ViewData["Title"] = "User Records";
+}
+
+<div class="user-records-container p-3 bg-white rounded shadow-sm">
+	<!-- Search & Filter Row -->
+	<div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+		@if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole(ManagerRoleName))
+		{
+			<form asp-action="IndexByManager" method="get" class="d-flex flex-wrap gap-2 align-items-center">
+				<!-- Search -->
+				<input asp-for="@Model.SearchInput" class="form-control" placeholder="Search name" style="width: 160px; height: 40px;" />
+				<button type="submit" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;">Search</button>
+
+				<!-- Filter -->
+				<select asp-for="@Model.JobTitleFilter" class="form-select text-secondary" style="width: 160px; height: 40px;" asp-items="@(new SelectList(Model.JobTitles, "Name", "Name"))">
+					<option value="">Job title</option>
+				</select>
+				<button type="submit" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;">Filter</button>
+			</form>
+		}
+
+		@if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole(AdminRoleName))
+		{
+			<form asp-action="IndexAll" method="get" class="d-flex flex-wrap gap-2 align-items-center">
+				<!-- Search -->
+				<input asp-for="@Model.SearchInput" class="form-control" placeholder="Search name" style="width: 160px; height: 40px;" />
+				<button type="submit" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;">Search</button>
+
+				<!-- Filters -->
+				<select asp-for="@Model.DepartmentFilter" class="form-select text-secondary" style="width: 160px; height: 40px;" asp-items="@(new SelectList(Model.Departments, "Name", "Name"))">
+					<option value="">Department</option>
+				</select>
+				<select asp-for="@Model.JobTitleFilter" class="form-select text-secondary" style="width: 160px; height: 40px;" asp-items="@(new SelectList(Model.JobTitles, "Name", "Name"))">
+					<option value="">Job title</option>
+				</select>
+				<button type="submit" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;">Filter</button>
+			</form>
+		}
+	</div>
+
+	<!-- Add User Button Row -->
+	<div class="d-flex justify-content-end">
+		<a class="btn btn-custom btn-outline-dark" 
+		style="height: 40px; width: 100px;"
+		asp-action="Add" method="get">Add User</a>
+	</div>
+</div>
+
+
+	<!-- Scrollable Table -->
+<div class="table-container">
+	<table class="table table-striped">
+		<table class="table table-striped table-bordered align-middle">
+			<thead class="table-light sticky-top">
+				<tr>
+					<th>Name</th>
+					<th>Job Title</th>
+					<th>Department</th>
+					<th>Salary</th>
+					<th>Roles</th>
+					<th class="text-center">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var user in Model.Users)
+				{
+					<tr>
+						<td>@user.FirstName @user.LastName</td>
+						<td>@user.JobTitle</td>
+						<td>@user.Department</td>
+						<td>@user.Salary.ToString("C")</td>
+						<td>
+							@if (user.RoleNames != null && user.RoleNames.Any())
+							{
+								<span>@string.Join(", ", user.RoleNames)</span>
+							}
+							else
+							{
+								<span class="text-muted">None</span>
+							}
+						</td>
+						<td class="text-center">
+							@if ((this.User?.Identity?.IsAuthenticated ?? false) && (this.User.IsInRole(ManagerRoleName)))
+							{
+								<a class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
+								   asp-action="Edit" method="get" asp-route-id="@user.Id">Edit</a>
+							}
+
+							@if ((this.User?.Identity?.IsAuthenticated ?? false) && (this.User.IsInRole(AdminRoleName)))
+							{
+								<a class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
+								   asp-action="Edit" method="get" asp-route-id="@user.Id">Edit</a>
+								<a class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
+								   asp-action="Delete" method="get" asp-route-id="@user.Id">Delete</a>
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</table>
+</div>
