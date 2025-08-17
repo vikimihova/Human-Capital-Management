@@ -212,15 +212,15 @@ namespace ManagementApp.Web.Controllers
             return RedirectToAction(nameof(UserRecord));
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize(Roles = AdminRoleName)]
-        public async Task<IActionResult> Delete(string userId)
+        public async Task<IActionResult> Delete(string id)
         {
             bool result;
 
             try
             {
-                result = await this.recordService.DeleteRecordAsync(userId);
+                result = await this.recordService.DeleteRecordAsync(id);
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
