@@ -38,5 +38,117 @@ namespace ManagementApp.Web.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Add()
+        {
+            AddDepartmentInputModel model = new AddDepartmentInputModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(AddDepartmentInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {                
+                return View(model);
+            }
+
+            try
+            {
+                bool result = await this.departmentService.AddDepartmentAsync(model);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            EditDepartmentInputModel model;
+
+            try
+            {
+                model = await this.departmentService.GenerateEditDepartmentInputModelAsync(id);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditDepartmentInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {               
+                return View(model);
+            }
+
+            try
+            {
+                bool result = await this.departmentService.EditDepartmentAsync(model);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            bool result;
+
+            try
+            {
+                result = await this.departmentService.DeleteDepartmentAsync(id);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            if (!result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Include(string id)
+        {
+            bool result;
+
+            try
+            {
+                result = await this.departmentService.IncludeDepartmentAsync(id);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            if (!result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

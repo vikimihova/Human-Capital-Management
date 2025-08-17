@@ -14,6 +14,8 @@ namespace ManagementApp.Core.Services.Interfaces
 
         Task<bool> DeleteDepartmentAsync(string id);
 
+        Task<bool> IncludeDepartmentAsync(string id);
+
 
         // AUXILIARY
         Task<EditDepartmentInputModel> GenerateEditDepartmentInputModelAsync(string id);
