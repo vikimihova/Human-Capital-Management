@@ -1,14 +1,147 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ManagementApp.Core.Services.Interfaces;
+using ManagementApp.Core.ViewModels.Department;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ManagementApp.Core.ViewModels.JobTitle;
 
 namespace ManagementApp.Web.Controllers
 {
     [Authorize]
     public class JobTitleController : Controller
     {
-        public IActionResult Index()
+        private readonly IJobTitleService jobTitleService;
+
+        public JobTitleController(IJobTitleService jobTitleService)
         {
-            return View();
+            this.jobTitleService = jobTitleService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            // generate view model
+            IEnumerable<JobTitleViewModel> model;
+
+            try
+            {
+                model = await this.jobTitleService.Index();
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Add()
+        {
+            AddJobTitleInputModel model = new AddJobTitleInputModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(AddJobTitleInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                bool result = await this.jobTitleService.AddJobTitleAsync(model);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            EditJobTitleInputModel model;
+
+            try
+            {
+                model = await this.jobTitleService.GenerateEditJobTitleInputModelAsync(id);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditJobTitleInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                bool result = await this.jobTitleService.EditJobTitleAsync(model);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            bool result;
+
+            try
+            {
+                result = await this.jobTitleService.DeleteJobTitleAsync(id);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            if (!result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Include(string id)
+        {
+            bool result;
+
+            try
+            {
+                result = await this.jobTitleService.IncludeJobTitleAsync(id);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            if (!result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

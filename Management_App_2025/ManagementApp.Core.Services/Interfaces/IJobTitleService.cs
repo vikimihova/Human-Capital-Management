@@ -13,6 +13,8 @@ namespace ManagementApp.Core.Services.Interfaces
 
         Task<bool> DeleteJobTitleAsync(string id);
 
+        Task<bool> IncludeJobTitleAsync(string id);
+
 
         // AUXILIARY
         Task<EditJobTitleInputModel> GenerateEditJobTitleInputModelAsync(string id);
