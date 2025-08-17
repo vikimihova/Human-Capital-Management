@@ -30,7 +30,7 @@
 		@if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole(AdminRoleName))
 		{
 			<div class="d-flex justify-content-end">
-				<a class="btn btn-custom btn-outline-dark"
+				<a class="btn btn-add btn-outline-dark"
 				   style="height: 40px; width: 100px;"
 				   asp-action="Add" method="get">Add User</a>
 			</div>
@@ -82,7 +82,7 @@
 							{
 								<a class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
 								   asp-action="Edit" method="get" asp-route-id="@user.Id">Edit</a>
-								<a class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
+								<a class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px;"
 								   asp-action="Delete" method="get" asp-route-id="@user.Id">Delete</a>
 							}
 						</td>

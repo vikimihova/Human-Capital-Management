@@ -37,6 +37,24 @@ a.text-dark:hover, button.btn-logout:hover {
     transition: background-color 0.3s ease;
 }
 
+.btn-delete {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-include, .btn-add {
+    background-color: yellow;
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
 .btn-custom:hover {
     background-color: orangered;
     color: black;
