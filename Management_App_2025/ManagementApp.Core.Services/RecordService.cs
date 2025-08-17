@@ -1,22 +1,29 @@
 ﻿using ManagementApp.Core.Services.Interfaces;
+using ManagementApp.Core.ViewModels.ApplicationRole;
 using ManagementApp.Core.ViewModels.ApplicationUser;
 using ManagementApp.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 using static ManagementApp.Common.ApplicationConstants;
+using static ManagementApp.Common.ErrorMessages.Roles;
+using static ManagementApp.Common.ErrorMessages.UserCreation;
 
 namespace ManagementApp.Core.Services
 {
     public class RecordService : BaseService, IRecordService
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IUserStore<ApplicationUser> userStore;
         private readonly RoleManager<ApplicationRole> roleManager;
 
         public RecordService(UserManager<ApplicationUser> userManager,
+            IUserStore<ApplicationUser> userStore,
             RoleManager<ApplicationRole> roleManager)
         {
             this.userManager = userManager;
+            this.userStore = userStore;
             this.roleManager = roleManager;
         }
 
@@ -167,9 +174,65 @@ namespace ManagementApp.Core.Services
             return model;
         }
 
-        public Task<bool> AddRecordAsync(AddRecordInputModel model)
+        public async Task<bool> AddRecordAsync(AddRecordInputModel model)
         {
-            throw new NotImplementedException();
+            // check if guids are valid
+            Guid departmentGuid = Guid.Empty;
+            Guid jobTitleGuid = Guid.Empty;
+            if (!IsGuidValid(model.DepartmentId, ref departmentGuid) || 
+                !IsGuidValid(model.JobTitleId, ref jobTitleGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if role is valid
+            ApplicationRole? role = await this.roleManager
+                .Roles
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Name == model.RoleName);
+
+            // check if user already exists
+            ApplicationUser? user = await this.userManager
+                .Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.FirstName == model.FirstName &&
+                                          u.LastName == model.LastName);
+
+            if (user != null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            user = new ApplicationUser()
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                Salary = model.Salary,
+                DepartmentId = departmentGuid,
+                JobTitleId = jobTitleGuid
+            };
+
+            // set username
+            await userStore.SetUserNameAsync(user, model.Username, CancellationToken.None);
+
+            // register user and set password
+            IdentityResult result = await userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException(String.Format(ErrorWhileRegisteringUser, model.Username));
+            }
+
+            // assign user to role
+            IdentityResult userRoleResult = await userManager.AddToRoleAsync(user, model.RoleName);
+
+            if (!userRoleResult.Succeeded)
+            {
+                throw new InvalidOperationException(String.Format(ErrorWhileAddingUserToRole, model.Username, model.RoleName));
+            }
+
+            return true;
         }
 
         public Task<bool> EditRecordAsync(EditRecordInputModel model)
@@ -177,18 +240,81 @@ namespace ManagementApp.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteUserAsync(string userId)
+        public async Task<bool> DeleteRecordAsync(string userId)
         {
-            throw new NotImplementedException();
+            // check input
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if user exists
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // check if user is already deleted
+            if (user.IsDeleted == true)
+            {
+                return false;
+            }
+
+            // soft delete user
+            user.IsDeleted = true;
+            await this.userManager.UpdateAsync(user);
+
+            return true;
         }        
 
         // AUXILIARY
 
-        public Task<EditRecordInputModel> GenerateEditRecordInputModelAsync(string userId)
+        public async Task<EditRecordInputModel> GenerateEditRecordInputModelAsync(string userId)
         {
-            throw new NotImplementedException();
-        }               
+            // check input
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuid))
+            {
+                throw new ArgumentException();
+            }
 
+            // check if user exists
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+
+            if (user == null || user.IsDeleted == true)
+            {
+                throw new InvalidOperationException();
+            }
+
+            EditRecordInputModel model = new EditRecordInputModel()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Salary = user.Salary,
+                DepartmentId = user.DepartmentId.ToString(),
+                JobTitleId = user.JobTitleId.ToString()
+            };
+
+            return model;
+        }
+
+        public async Task<IEnumerable<SelectRoleViewModel>> GetRolesAsync()
+        {
+            IEnumerable<SelectRoleViewModel> roles = await roleManager
+                .Roles
+                .AsNoTracking()
+                .Select(r => new SelectRoleViewModel()
+                {
+                    Id = r.Id.ToString(),
+                    Name = r.Name!
+                })
+                .ToArrayAsync();
+
+            return roles;
+        }
 
         public async Task<string> GetDepartmentNameByUserIdAsync(string userId)
         {

@@ -25,7 +25,7 @@ namespace ManagementApp.Core.ViewModels.ApplicationUser
 
         [Required]
         [Range(SalaryMinAmount, SalaryMaxAmount)]
-        public int Salary { get; set; }
+        public decimal Salary { get; set; }
 
         [Required]
         public string DepartmentId { get; set; } = null!;

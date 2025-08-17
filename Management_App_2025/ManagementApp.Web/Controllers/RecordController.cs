@@ -100,46 +100,128 @@ namespace ManagementApp.Web.Controllers
             return View(model);
         }
 
-        //[HttpGet]
-        //[Authorize(Roles = AdminRoleName)]
-        //public async Task<IActionResult> Add()
-        //{
+        [HttpGet]
+        [Authorize(Roles = AdminRoleName)]
+        public async Task<IActionResult> Add()
+        {
+            AddRecordInputModel model = new AddRecordInputModel();
 
-        //}
+            model.Departments = await this.departmentService.GetDepartmentsAsync();
+            model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
+            model.Roles = await this.recordService.GetRolesAsync();
 
-        //[HttpPost]
-        //[Authorize(Roles = AdminRoleName)]
-        //public async Task<IActionResult> Add(AddRecordInputModel model)
-        //{
+            return View(model);
+        }
 
-        //}
+        [HttpPost]
+        [Authorize(Roles = AdminRoleName)]
+        public async Task<IActionResult> Add(AddRecordInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Departments = await this.departmentService.GetDepartmentsAsync();
+                model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
+                model.Roles = await this.recordService.GetRolesAsync();
 
-        //[HttpGet]
-        //[Authorize(Roles = AdminOrManagerRoleName)]
-        //public async Task<IActionResult> Edit(string userId)
-        //{
+                return View(model);
+            }
 
-        //}
+            try
+            {
+                bool result = await this.recordService.AddRecordAsync(model);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
 
-        //[HttpPost]
-        //[Authorize(Roles = AdminRoleName)]
-        //public async Task<IActionResult> EditByAdmin(EditRecordInputModel model)
-        //{
+            return RedirectToAction(nameof(UserRecord));
+        }
 
-        //}
+        [HttpGet]
+        [Authorize(Roles = AdminOrManagerRoleName)]
+        public async Task<IActionResult> Edit(string userId)
+        {
+            EditRecordInputModel model;
 
-        //[HttpPost]
-        //[Authorize(Roles = ManagerRoleName)]
-        //public async Task<IActionResult> EditByManager(EditRecordInputModel model)
-        //{
+            try
+            {
+                model = await this.recordService.GenerateEditRecordInputModelAsync(userId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
 
-        //}
+            if (this.User.IsInRole(AdminRoleName))
+            {
+                model.Departments = await this.departmentService.GetDepartmentsAsync();
+                model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
+            }
+            else if (this.User.IsInRole(ManagerRoleName))
+            {
+                string managerUserId = this.User.GetUserId()!;
+                string departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(managerUserId);
+                model.JobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
+            }            
 
-        //[HttpPost]
-        //[Authorize(Roles = AdminRoleName)]
-        //public async Task<IActionResult> Delete(string userId)
-        //{
+            return View(model);
+        }
 
-        //}
+        [HttpPost]
+        [Authorize(Roles = AdminOrManagerRoleName)]
+        public async Task<IActionResult> Edit(EditRecordInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                if (this.User.IsInRole(AdminRoleName))
+                {
+                    model.Departments = await this.departmentService.GetDepartmentsAsync();
+                    model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
+                }
+                else if (this.User.IsInRole(ManagerRoleName))
+                {
+                    string managerUserId = this.User.GetUserId()!;
+                    string departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(managerUserId);
+                    model.JobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
+                }
+
+                return View(model);
+            }
+
+            try
+            {
+                bool result = await this.recordService.EditRecordAsync(model);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(UserRecord));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = AdminRoleName)]
+        public async Task<IActionResult> Delete(string userId)
+        {
+            bool result;
+
+            try
+            {
+                result = await this.recordService.DeleteRecordAsync(userId);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest();
+            }
+
+            if (!result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

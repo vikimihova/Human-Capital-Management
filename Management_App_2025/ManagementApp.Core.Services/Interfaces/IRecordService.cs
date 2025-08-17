@@ -1,4 +1,5 @@
-﻿using ManagementApp.Core.ViewModels.ApplicationUser;
+﻿using ManagementApp.Core.ViewModels.ApplicationRole;
+using ManagementApp.Core.ViewModels.ApplicationUser;
 using ManagementApp.Core.ViewModels.JobTitle;
 
 namespace ManagementApp.Core.Services.Interfaces
@@ -16,12 +17,15 @@ namespace ManagementApp.Core.Services.Interfaces
 
         Task<bool> EditRecordAsync(EditRecordInputModel model);        
 
-        Task<bool> DeleteUserAsync(string userId);
+        Task<bool> DeleteRecordAsync(string userId);
 
 
         // AUXILIARY
+
         Task<EditRecordInputModel> GenerateEditRecordInputModelAsync(string userId);
 
         Task<string> GetDepartmentNameByUserIdAsync(string userId);
+
+        Task<IEnumerable<SelectRoleViewModel>> GetRolesAsync();
     }
 }
