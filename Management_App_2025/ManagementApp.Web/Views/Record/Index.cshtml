@@ -9,45 +9,32 @@
 <div class="user-records-container p-3 bg-white rounded shadow-sm">
 	<!-- Search & Filter Row -->
 	<div class="d-flex flex-wrap gap-2 align-items-center mb-3">
-		@if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole(ManagerRoleName))
-		{
-			<form asp-action="IndexByManager" method="get" class="d-flex flex-wrap gap-2 align-items-center">
-				<!-- Search -->
-				<input asp-for="@Model.SearchInput" class="form-control" placeholder="Search name" style="width: 160px; height: 40px;" />
-				<button type="submit" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;">Search</button>
+		<form asp-action="Index" method="get" class="d-flex flex-wrap gap-2 align-items-center">
+			<!-- Search -->
+			<input asp-for="@Model.SearchInput" class="form-control" placeholder="Search name" style="width: 160px; height: 40px;" />
+			<button type="submit" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;">Search</button>
 
-				<!-- Filter -->
-				<select asp-for="@Model.JobTitleFilter" class="form-select text-secondary" style="width: 160px; height: 40px;" asp-items="@(new SelectList(Model.JobTitles, "Name", "Name"))">
-					<option value="">Job title</option>
-				</select>
-				<button type="submit" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;">Filter</button>
-			</form>
-		}
-
-		@if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole(AdminRoleName))
-		{
-			<form asp-action="IndexAll" method="get" class="d-flex flex-wrap gap-2 align-items-center">
-				<!-- Search -->
-				<input asp-for="@Model.SearchInput" class="form-control" placeholder="Search name" style="width: 160px; height: 40px;" />
-				<button type="submit" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;">Search</button>
-
-				<!-- Filters -->
+			<!-- Filter -->
+			@if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole(AdminRoleName))
+			{
 				<select asp-for="@Model.DepartmentFilter" class="form-select text-secondary" style="width: 160px; height: 40px;" asp-items="@(new SelectList(Model.Departments, "Name", "Name"))">
 					<option value="">Department</option>
 				</select>
-				<select asp-for="@Model.JobTitleFilter" class="form-select text-secondary" style="width: 160px; height: 40px;" asp-items="@(new SelectList(Model.JobTitles, "Name", "Name"))">
-					<option value="">Job title</option>
-				</select>
-				<button type="submit" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;">Filter</button>
-			</form>
+			}
+			<select asp-for="@Model.JobTitleFilter" class="form-select text-secondary" style="width: 160px; height: 40px;" asp-items="@(new SelectList(Model.JobTitles, "Name", "Name"))">
+				<option value="">Job title</option>
+			</select>
+			<button type="submit" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;">Filter</button>
+		</form>	
+		<!-- Add User Button Row -->
+		@if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole(AdminRoleName))
+		{
+			<div class="d-flex justify-content-end">
+				<a class="btn btn-custom btn-outline-dark"
+				   style="height: 40px; width: 100px;"
+				   asp-action="Add" method="get">Add User</a>
+			</div>
 		}
-	</div>
-
-	<!-- Add User Button Row -->
-	<div class="d-flex justify-content-end">
-		<a class="btn btn-custom btn-outline-dark" 
-		style="height: 40px; width: 100px;"
-		asp-action="Add" method="get">Add User</a>
 	</div>
 </div>
 

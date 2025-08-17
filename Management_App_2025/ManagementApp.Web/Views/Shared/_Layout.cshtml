@@ -22,16 +22,11 @@
                 </a>
             </div>
             <div class="list-group list-group-flush d-flex flex-column align-items-start" style="margin-left: 35px;">
-                @if ((this.User?.Identity?.IsAuthenticated ?? false) && (this.User.IsInRole(ManagerRoleName)))
-                {
-                    <a class="nav-link text-dark" asp-controller="Record" asp-action="UserRecord">Profile</a>
-                    <a class="nav-link text-dark" asp-controller="Record" asp-action="IndexByManager">Employees</a>
-                }
+                <a class="nav-link text-dark" asp-controller="Record" asp-action="UserRecord">Profile</a>
+                <a class="nav-link text-dark" asp-controller="Record" asp-action="Index">Employees</a>
 
                 @if ((this.User?.Identity?.IsAuthenticated ?? false) && (this.User.IsInRole(AdminRoleName)))
-                {
-                    <a class="nav-link text-dark" asp-controller="Record" asp-action="UserRecord">Profile</a>
-                    <a class="nav-link text-dark" asp-controller="Record" asp-action="IndexAll">Employees</a>
+                {                   
                     <a class="nav-link text-dark" asp-controller="Department" asp-action="Index">Departments</a>
                     <a class="nav-link text-dark" asp-controller="JobTitle" asp-action="Index">Job Titles</a>
                 }

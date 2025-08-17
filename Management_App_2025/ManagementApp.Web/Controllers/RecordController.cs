@@ -10,14 +10,12 @@ using static ManagementApp.Common.ApplicationConstants;
 using static NuGet.Packaging.PackagingConstants;
 
 namespace ManagementApp.Web.Controllers
-{
-    [Authorize]
+{    
     public class RecordController : Controller
     {
         private readonly IRecordService recordService;
         private readonly IDepartmentService departmentService;
         private readonly IJobTitleService jobTitleService;
-        //private readonly UserManager<ApplicationUser> userManager;
 
         public RecordController(
             IRecordService recordService,
@@ -30,70 +28,58 @@ namespace ManagementApp.Web.Controllers
         }        
 
         [HttpGet]
-        [Authorize(Roles = AdminRoleName)]
-        public async Task<IActionResult> IndexAll(UserRecordIndexWrapper inputModel)
+        [Authorize(Roles = AdminOrManagerRoleName)]
+        public async Task<IActionResult> Index(UserRecordIndexWrapper inputModel)
         {
+            string userId = this.User.GetUserId()!;
+
             // generate view model
+            UserRecordIndexWrapper model = new UserRecordIndexWrapper();
             ICollection<UserRecordViewModel> users;
             ICollection<SelectDepartmentViewModel> departments;
             ICollection<SelectJobTitleViewModel> jobTitles;
 
-            string userId = this.User.GetUserId()!;
-
-            try
+            if (this.User.IsInRole(AdminRoleName))
             {
-                users = await this.recordService.Index(userId, inputModel);
-                departments = await this.departmentService.GetDepartmentsAsync();
-                jobTitles = await this.jobTitleService.GetJobTitlesAsync();
+                try
+                {
+                    users = await this.recordService.Index(userId, inputModel);
+                    departments = await this.departmentService.GetDepartmentsAsync();
+                    jobTitles = await this.jobTitleService.GetJobTitlesAsync();
+                }
+                catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+                {
+                    return BadRequest();
+                }
+
+                model.Users = users;
+                model.Departments = departments;
+                model.JobTitles = jobTitles;
             }
-            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            else if (this.User.IsInRole(ManagerRoleName))
             {
-                return BadRequest();
-            }
+                string departmentName = "";
 
+                try
+                {
+                    users = await this.recordService.GetEmployeesByManager(userId, inputModel);
+                    departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(userId);
+                    jobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
+                }
+                catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+                {
+                    return BadRequest();
+                }
 
-            UserRecordIndexWrapper model = new UserRecordIndexWrapper
-            {
-                Users = users,
-                Departments = departments,
-                JobTitles = jobTitles
-            };
+                model.Users = users;
+                model.JobTitles= jobTitles;
+            }            
 
             return View("Index", model);
         }
 
         [HttpGet]
-        [Authorize(Roles = ManagerRoleName)]
-        public async Task<IActionResult> IndexByManager(UserRecordIndexWrapper inputModel)
-        {
-            // generate view model
-            ICollection<UserRecordViewModel> users;
-            ICollection<SelectJobTitleViewModel> jobTitles;
-
-            string userId = this.User.GetUserId()!;
-            string departmentName = "";
-
-            try
-            {
-                users = await this.recordService.GetEmployeesByManager(userId, inputModel);
-                departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(userId);
-                jobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
-            }
-            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
-            {
-                return BadRequest();
-            }
-
-
-            UserRecordIndexWrapper model = new UserRecordIndexWrapper
-            {
-                Users = users,
-                JobTitles = jobTitles
-            };
-
-            return View("Index", model);
-        }
-
+        [Authorize]
         public async Task<IActionResult> UserRecord()
         {
             // get userId
@@ -113,5 +99,47 @@ namespace ManagementApp.Web.Controllers
 
             return View(model);
         }
+
+        //[HttpGet]
+        //[Authorize(Roles = AdminRoleName)]
+        //public async Task<IActionResult> Add()
+        //{
+
+        //}
+
+        //[HttpPost]
+        //[Authorize(Roles = AdminRoleName)]
+        //public async Task<IActionResult> Add(AddRecordInputModel model)
+        //{
+
+        //}
+
+        //[HttpGet]
+        //[Authorize(Roles = AdminOrManagerRoleName)]
+        //public async Task<IActionResult> Edit(string userId)
+        //{
+
+        //}
+
+        //[HttpPost]
+        //[Authorize(Roles = AdminRoleName)]
+        //public async Task<IActionResult> EditByAdmin(EditRecordInputModel model)
+        //{
+
+        //}
+
+        //[HttpPost]
+        //[Authorize(Roles = ManagerRoleName)]
+        //public async Task<IActionResult> EditByManager(EditRecordInputModel model)
+        //{
+
+        //}
+
+        //[HttpPost]
+        //[Authorize(Roles = AdminRoleName)]
+        //public async Task<IActionResult> Delete(string userId)
+        //{
+
+        //}
     }
 }
