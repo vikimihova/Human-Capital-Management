@@ -15,7 +15,9 @@ namespace ManagementApp.Core.Services.Interfaces
 
         Task<bool> AddRecordAsync(AddRecordInputModel model);
 
-        Task<bool> EditRecordAsync(EditRecordInputModel model);        
+        Task<bool> EditRecordByAdminAsync(EditRecordInputModel model);        
+
+        Task<bool> EditRecordByManagerAsync(EditRecordInputModel model);        
 
         Task<bool> DeleteRecordAsync(string userId);
 

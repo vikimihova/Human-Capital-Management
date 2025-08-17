@@ -51,6 +51,7 @@ namespace ManagementApp.Core.Services
                 // map to view model
                 model.Add(new UserRecordViewModel()
                 {
+                    Id = user.Id.ToString(),
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     JobTitleId = user.JobTitle.Id.ToString(),
@@ -191,6 +192,11 @@ namespace ManagementApp.Core.Services
                 .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Name == model.RoleName);
 
+            if (role == null)
+            {
+                throw new InvalidOperationException();
+            }
+
             // check if user already exists
             ApplicationUser? user = await this.userManager
                 .Users
@@ -235,9 +241,87 @@ namespace ManagementApp.Core.Services
             return true;
         }
 
-        public Task<bool> EditRecordAsync(EditRecordInputModel model)
+        public async Task<bool> EditRecordByAdminAsync(EditRecordInputModel model)
         {
-            throw new NotImplementedException();
+            // check if guids are valid
+            Guid departmentGuid = Guid.Empty;
+            Guid jobTitleGuid = Guid.Empty;
+            if (!IsGuidValid(model.DepartmentId, ref departmentGuid) ||
+                !IsGuidValid(model.JobTitleId, ref jobTitleGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            //// check if role is valid
+            //ApplicationRole? role = await this.roleManager
+            //    .Roles
+            //    .AsNoTracking()
+            //    .FirstOrDefaultAsync(r => r.Name == model.RoleName);
+
+            //if (role == null)
+            //{
+            //    throw new InvalidOperationException();
+            //}
+
+            // check if user already exists
+            ApplicationUser? user = await this.userManager
+                .Users
+                .FirstOrDefaultAsync(u => u.Id.ToString() == model.Id);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Salary = model.Salary;
+            user.DepartmentId = departmentGuid;
+            user.JobTitleId = jobTitleGuid;
+
+            //bool isInRole = await this.userManager.IsInRoleAsync(user, model.RoleName);
+
+            //if (isInRole == false)
+            //{
+            //    IdentityResult userRoleResult = await this.userManager.AddToRoleAsync(user, model.RoleName);
+
+            //    if (!userRoleResult.Succeeded)
+            //    {
+            //        throw new InvalidOperationException();
+            //    }
+            //}
+
+            await this.userManager.UpdateAsync(user);
+
+            return true;
+        }
+
+        public async Task<bool> EditRecordByManagerAsync(EditRecordInputModel model)
+        {
+            // check if guids are valid
+            Guid departmentGuid = Guid.Empty;
+            Guid jobTitleGuid = Guid.Empty;
+            if (!IsGuidValid(model.DepartmentId, ref departmentGuid) ||
+                !IsGuidValid(model.JobTitleId, ref jobTitleGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if user already exists
+            ApplicationUser? user = await this.userManager
+                .Users
+                .FirstOrDefaultAsync(u => u.Id.ToString() == model.Id);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            user.Salary = model.Salary;
+            user.JobTitleId = jobTitleGuid;
+            await this.userManager.UpdateAsync(user);
+
+            return true;
         }
 
         public async Task<bool> DeleteRecordAsync(string userId)
@@ -291,6 +375,7 @@ namespace ManagementApp.Core.Services
 
             EditRecordInputModel model = new EditRecordInputModel()
             {
+                Id = userId,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Salary = user.Salary,

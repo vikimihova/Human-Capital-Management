@@ -140,13 +140,13 @@ namespace ManagementApp.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles = AdminOrManagerRoleName)]
-        public async Task<IActionResult> Edit(string userId)
+        public async Task<IActionResult> Edit(string id)
         {
             EditRecordInputModel model;
 
             try
             {
-                model = await this.recordService.GenerateEditRecordInputModelAsync(userId);
+                model = await this.recordService.GenerateEditRecordInputModelAsync(id);
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
@@ -157,15 +157,19 @@ namespace ManagementApp.Web.Controllers
             {
                 model.Departments = await this.departmentService.GetDepartmentsAsync();
                 model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
+                //model.Roles = await this.recordService.GetRolesAsync();
+
+                return View("EditByAdmin", model);
             }
             else if (this.User.IsInRole(ManagerRoleName))
             {
                 string managerUserId = this.User.GetUserId()!;
                 string departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(managerUserId);
                 model.JobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
-            }            
+                //model.Roles = await this.recordService.GetRolesAsync();                
+            }
 
-            return View(model);
+            return View("EditByManager", model);
         }
 
         [HttpPost]
@@ -191,7 +195,14 @@ namespace ManagementApp.Web.Controllers
 
             try
             {
-                bool result = await this.recordService.EditRecordAsync(model);
+                if (this.User.IsInRole(AdminRoleName))
+                {
+                    bool result = await this.recordService.EditRecordByAdminAsync(model);
+                }
+                else if (this.User.IsInRole(ManagerRoleName))
+                {
+                    bool result = await this.recordService.EditRecordByManagerAsync(model);
+                }                
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {

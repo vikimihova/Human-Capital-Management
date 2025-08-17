@@ -1,0 +1,29 @@
+﻿@using ManagementApp.Core.ViewModels.ApplicationUser
+@model EditRecordInputModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">
+            <form asp-action="Edit" method="post" asp-antiforgery="true">
+                <input asp-for="@Model.FirstName" type="hidden" />
+                <input asp-for="@Model.LastName" type="hidden" />
+                <input asp-for="@Model.DepartmentId" type="hidden" />
+                <div>
+                    <label asp-for="@Model.JobTitleId" class="form-label-add-edit">Select Job Title</label>
+                    <div class="d-flex">
+                        <select asp-for="@Model.JobTitleId" class="form-control" aria-required="true" asp-items="@(new SelectList(Model.JobTitles, "Id", "Name"))">
+                            <option value="">Select Job Title...</option>
+                        </select>
+                        <span asp-validation-for="@Model.JobTitleId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <label for="PublicationYear">Salary</label>
+                    <input asp-for="@Model.Salary" class="form-control" />
+                    <span asp-validation-for="@Model.Salary" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-custom mt-2">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
