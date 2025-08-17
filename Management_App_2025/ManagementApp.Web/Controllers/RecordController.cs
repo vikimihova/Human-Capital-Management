@@ -135,7 +135,7 @@ namespace ManagementApp.Web.Controllers
                 return BadRequest();
             }
 
-            return RedirectToAction(nameof(UserRecord));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
