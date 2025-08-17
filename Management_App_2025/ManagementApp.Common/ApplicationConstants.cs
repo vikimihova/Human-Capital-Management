@@ -1,4 +1,6 @@
-﻿namespace ManagementApp.Common
+﻿using static ManagementApp.Common.ErrorMessages;
+
+namespace ManagementApp.Common
 {
     public static class ApplicationConstants
     {
