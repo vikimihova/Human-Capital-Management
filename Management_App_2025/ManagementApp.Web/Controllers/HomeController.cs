@@ -1,6 +1,8 @@
-using System.Diagnostics;
+using ManagementApp.Infrastructure;
 using ManagementApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace ManagementApp.Web.Controllers
 {
@@ -13,13 +15,15 @@ namespace ManagementApp.Web.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
-        }
+            if (this.User?.Identity?.IsAuthenticated ?? false)
+            {                
+                return RedirectToAction("UserRecord", "Record");
+            }
 
-        public IActionResult Privacy()
-        {
             return View();
         }
 
