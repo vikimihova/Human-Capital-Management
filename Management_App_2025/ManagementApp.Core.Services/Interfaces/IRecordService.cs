@@ -6,7 +6,9 @@ namespace ManagementApp.Core.Services.Interfaces
     public interface IRecordService
     {
         // MAIN
-        Task<UserRecordIndexWrapper> Index();
+        Task<ICollection<UserRecordViewModel>> Index(string userId, UserRecordIndexWrapper inputModel);
+
+        Task<ICollection<UserRecordViewModel>> GetEmployeesByManager(string userId, UserRecordIndexWrapper inputModel);
 
         Task<UserRecordViewModel> GetUserByIdAsync(string userId);
 
@@ -20,8 +22,6 @@ namespace ManagementApp.Core.Services.Interfaces
         // AUXILIARY
         Task<EditRecordInputModel> GenerateEditRecordInputModelAsync(string userId);
 
-        Task<bool> AssignUserToRoleAsync(string userId, string roleName);
-
-        Task<bool> RemoveUserFromRoleAsync(string userId, string roleName);
+        Task<string> GetDepartmentNameByUserIdAsync(string userId);
     }
 }

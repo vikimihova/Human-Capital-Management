@@ -17,6 +17,6 @@ namespace ManagementApp.Core.Services.Interfaces
         // AUXILIARY
         Task<EditJobTitleInputModel> GenerateEditJobTitleInputModelAsync(string id);
 
-        Task<ICollection<SelectJobTitleViewModel>> GetJobTitlesAsync();
+        Task<ICollection<SelectJobTitleViewModel>> GetJobTitlesAsync(string? departmentName = null);
     }
 }
