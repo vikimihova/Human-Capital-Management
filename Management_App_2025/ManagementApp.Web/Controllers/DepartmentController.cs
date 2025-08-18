@@ -10,6 +10,7 @@ using static ManagementApp.Common.ApplicationConstants;
 namespace ManagementApp.Web.Controllers
 {
     [Authorize]
+    [Authorize(Roles = AdminRoleName)]
     public class DepartmentController : Controller
     {
         private readonly IDepartmentService departmentService;
@@ -21,7 +22,6 @@ namespace ManagementApp.Web.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = AdminRoleName)]
         public async Task<IActionResult> Index()
         {
             // generate view model
