@@ -37,11 +37,5 @@ namespace ManagementApp.Core.ViewModels.ApplicationUser
 
         [Required]
         public IEnumerable<SelectDepartmentViewModel> Departments { get; set; } = new List<SelectDepartmentViewModel>();
-
-        //[Required]
-        //public string RoleName { get; set; } = null!;
-
-        //[Required]
-        //public IEnumerable<SelectRoleViewModel> Roles { get; set; } = new List<SelectRoleViewModel>();
     }
 }

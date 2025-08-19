@@ -157,7 +157,6 @@ namespace ManagementApp.Web.Controllers
             {
                 model.Departments = await this.departmentService.GetDepartmentsAsync();
                 model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
-                //model.Roles = await this.recordService.GetRolesAsync();
 
                 return View("EditByAdmin", model);
             }
@@ -166,7 +165,6 @@ namespace ManagementApp.Web.Controllers
                 string managerUserId = this.User.GetUserId()!;
                 string departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(managerUserId);
                 model.JobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
-                //model.Roles = await this.recordService.GetRolesAsync();                
             }
 
             return View("EditByManager", model);
@@ -182,15 +180,17 @@ namespace ManagementApp.Web.Controllers
                 {
                     model.Departments = await this.departmentService.GetDepartmentsAsync();
                     model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
+
+                    return View("EditByAdmin", model);
                 }
                 else if (this.User.IsInRole(ManagerRoleName))
                 {
                     string managerUserId = this.User.GetUserId()!;
                     string departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(managerUserId);
                     model.JobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
-                }
 
-                return View(model);
+                    return View("EditByManager", model);
+                }
             }
 
             try
@@ -209,7 +209,7 @@ namespace ManagementApp.Web.Controllers
                 return BadRequest();
             }
 
-            return RedirectToAction(nameof(UserRecord));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
