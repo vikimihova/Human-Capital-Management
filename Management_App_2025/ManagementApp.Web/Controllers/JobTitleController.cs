@@ -1,8 +1,10 @@
-﻿using ManagementApp.Core.Services.Interfaces;
-using ManagementApp.Core.ViewModels.Department;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+
+using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.JobTitle;
+
+using static ManagementApp.Common.ApplicationConstants;
 
 namespace ManagementApp.Web.Controllers
 {

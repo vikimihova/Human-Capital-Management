@@ -1,8 +1,8 @@
-using ManagementApp.Infrastructure;
-using ManagementApp.Web.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
+using ManagementApp.Web.Models;
 
 namespace ManagementApp.Web.Controllers
 {

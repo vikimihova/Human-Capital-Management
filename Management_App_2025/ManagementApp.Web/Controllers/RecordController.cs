@@ -1,13 +1,13 @@
-﻿using ManagementApp.Core.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
+using ManagementApp.Infrastructure;
+using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.ApplicationUser;
 using ManagementApp.Core.ViewModels.Department;
 using ManagementApp.Core.ViewModels.JobTitle;
-using ManagementApp.Infrastructure;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 using static ManagementApp.Common.ApplicationConstants;
-using static NuGet.Packaging.PackagingConstants;
 
 namespace ManagementApp.Web.Controllers
 {    
