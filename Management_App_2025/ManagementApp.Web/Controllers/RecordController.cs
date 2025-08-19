@@ -9,6 +9,8 @@ using ManagementApp.Core.ViewModels.JobTitle;
 
 using static ManagementApp.Common.ApplicationConstants;
 using static ManagementApp.Common.ErrorMessages.Logging;
+using ManagementApp.Common.CustomExceptions;
+using AspNetCoreGeneratedDocument;
 
 namespace ManagementApp.Web.Controllers
 {   
@@ -72,7 +74,12 @@ namespace ManagementApp.Web.Controllers
             {
                 logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Index))));
                 return BadRequest();
-            }   
+            }
+            catch (Exception ex) when (ex is EntityNullException)
+            {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Index))));
+                return StatusCode(404);
+            }
 
             return View("Index", model);
         }
@@ -94,6 +101,11 @@ namespace ManagementApp.Web.Controllers
             {
                 logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(UserRecord))));
                 return BadRequest();
+            }
+            catch (Exception ex) when (ex is EntityNullException)
+            {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(UserRecord))));
+                return StatusCode(404);
             }
 
             return View(model);
@@ -176,7 +188,12 @@ namespace ManagementApp.Web.Controllers
             {
                 logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Edit))));
                 return BadRequest();
-            }     
+            }
+            catch (Exception ex) when (ex is EntityNullException)
+            {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Edit))));
+                return StatusCode(404);
+            }
 
             return RedirectToAction(nameof(Index));
         }

@@ -1,4 +1,5 @@
-﻿using ManagementApp.Core.Services.Interfaces;
+﻿using ManagementApp.Common.CustomExceptions;
+using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.Department;
 using ManagementApp.Core.ViewModels.JobTitle;
 using ManagementApp.Data.Models;
@@ -62,11 +63,18 @@ namespace ManagementApp.Core.Services
 
         public async Task<bool> EditJobTitleAsync(EditJobTitleInputModel model)
         {
+            // check if guids are valid
+            Guid jobTitleGuid = Guid.Empty;
+            if (!IsGuidValid(model.Id, ref jobTitleGuid))
+            {
+                throw new ArgumentException();
+            }
+
             // check if jobTitle already exists
             JobTitle? jobTitle = await this.jobTitleRepository
                 .GetAllAttached()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(j => j.Id.ToString() == model.Id);
+                .FirstOrDefaultAsync(j => j.Id == jobTitleGuid);
 
             if (jobTitle == null)
             {
@@ -94,7 +102,7 @@ namespace ManagementApp.Core.Services
 
             if (jobTitle == null)
             {
-                throw new InvalidOperationException();
+                return false;
             }
 
             // check if jobTitle already deleted
@@ -106,7 +114,7 @@ namespace ManagementApp.Core.Services
             // check if jobTitle has no employees
             if (jobTitle.ApplicationUsers.Any())
             {
-                throw new InvalidOperationException();
+                return false;
             }
 
             // soft delete jobTitle
@@ -130,7 +138,7 @@ namespace ManagementApp.Core.Services
 
             if (jobTitle == null)
             {
-                throw new InvalidOperationException();
+                return false;
             }
 
             // check if jobTitle already deleted
@@ -157,10 +165,15 @@ namespace ManagementApp.Core.Services
                 throw new ArgumentException();
             }
 
-            // check if department exists
+            // check if jobTitle exists
             JobTitle? jobTitle = await this.jobTitleRepository.GetByIdAsync(jobTitleGuid);
 
-            if (jobTitle == null || jobTitle.IsDeleted == true)
+            if (jobTitle == null)
+            {
+                throw new EntityNullException();
+            }
+
+            if (jobTitle.IsDeleted == true)
             {
                 throw new InvalidOperationException();
             }

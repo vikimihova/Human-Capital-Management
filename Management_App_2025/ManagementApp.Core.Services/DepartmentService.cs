@@ -1,4 +1,5 @@
-﻿using ManagementApp.Core.Services.Interfaces;
+﻿using ManagementApp.Common.CustomExceptions;
+using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.Department;
 using ManagementApp.Data.Models;
 using ManagementApp.Data.Repository.Interfaces;
@@ -61,11 +62,18 @@ namespace ManagementApp.Core.Services
 
         public async Task<bool> EditDepartmentAsync(EditDepartmentInputModel model)
         {
+            // check if guids are valid
+            Guid departmentGuid = Guid.Empty;
+            if (!IsGuidValid(model.Id, ref departmentGuid))
+            {
+                throw new ArgumentException();
+            }
+
             // check if department already exists
             Department? department = await this.departmentRepository
                 .GetAllAttached()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(d => d.Id.ToString() == model.Id);
+                .FirstOrDefaultAsync(d => d.Id == departmentGuid);
 
             if (department == null)
             {
@@ -93,7 +101,7 @@ namespace ManagementApp.Core.Services
 
             if (department == null)
             {
-                throw new InvalidOperationException();
+                return false;
             }
 
             // check if department already deleted
@@ -105,7 +113,7 @@ namespace ManagementApp.Core.Services
             // check if department has no employees
             if (department.ApplicationUsers.Any())
             {
-                throw new InvalidOperationException();
+                return false;
             }
 
             // soft delete department
@@ -129,7 +137,7 @@ namespace ManagementApp.Core.Services
 
             if (department == null)
             {
-                throw new InvalidOperationException();
+                return false;
             }
 
             // check if department already deleted
@@ -159,7 +167,12 @@ namespace ManagementApp.Core.Services
             // check if department exists
             Department? department = await this.departmentRepository.GetByIdAsync(departmentGuid);
 
-            if (department == null || department.IsDeleted == true)
+            if (department == null)
+            {
+                throw new EntityNullException();
+            }
+
+            if (department.IsDeleted == true)
             {
                 throw new InvalidOperationException();
             }

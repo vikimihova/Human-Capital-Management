@@ -84,6 +84,7 @@ namespace ManagementApp.Web.Controllers
         [ProducesResponseType(typeof(EditDepartmentInputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Edit(string id)
         {
             EditDepartmentInputModel model;
