@@ -1,4 +1,5 @@
-﻿using ManagementApp.Core.Services.Interfaces;
+﻿using ManagementApp.Common.CustomExceptions;
+using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.ApplicationRole;
 using ManagementApp.Core.ViewModels.ApplicationUser;
 using ManagementApp.Data.Models;
@@ -120,7 +121,7 @@ namespace ManagementApp.Core.Services
             // check if user exists
             if (user == null)
             {
-                throw new InvalidOperationException();
+                throw new EntityNullException();
             }
 
             // check if user is in role Manager
@@ -159,7 +160,7 @@ namespace ManagementApp.Core.Services
             // check if user exists
             if (user == null)
             {
-                throw new InvalidOperationException();
+                throw new EntityNullException();
             }
 
             ICollection<string> roles = await this.userManager.GetRolesAsync(user);
@@ -257,17 +258,6 @@ namespace ManagementApp.Core.Services
                 throw new ArgumentException();
             }
 
-            //// check if role is valid
-            //ApplicationRole? role = await this.roleManager
-            //    .Roles
-            //    .AsNoTracking()
-            //    .FirstOrDefaultAsync(r => r.Name == model.RoleName);
-
-            //if (role == null)
-            //{
-            //    throw new InvalidOperationException();
-            //}
-
             // check if user already exists
             ApplicationUser? user = await this.userManager
                 .Users
@@ -283,19 +273,7 @@ namespace ManagementApp.Core.Services
             user.Salary = model.Salary;
             user.DepartmentId = departmentGuid;
             user.JobTitleId = jobTitleGuid;
-
-            //bool isInRole = await this.userManager.IsInRoleAsync(user, model.RoleName);
-
-            //if (isInRole == false)
-            //{
-            //    IdentityResult userRoleResult = await this.userManager.AddToRoleAsync(user, model.RoleName);
-
-            //    if (!userRoleResult.Succeeded)
-            //    {
-            //        throw new InvalidOperationException();
-            //    }
-            //}
-
+                       
             await this.userManager.UpdateAsync(user);
 
             return true;
@@ -343,7 +321,7 @@ namespace ManagementApp.Core.Services
 
             if (user == null)
             {
-                throw new InvalidOperationException();
+                return false;
             }
 
             // check if user is already deleted
@@ -373,7 +351,12 @@ namespace ManagementApp.Core.Services
             // check if user exists
             ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
 
-            if (user == null || user.IsDeleted == true)
+            if (user == null)
+            {
+                throw new EntityNullException();
+            }
+
+            if (user.IsDeleted == true)
             {
                 throw new InvalidOperationException();
             }
@@ -426,7 +409,7 @@ namespace ManagementApp.Core.Services
             // check if user exists
             if (user == null)
             {
-                throw new InvalidOperationException();
+                throw new EntityNullException();
             }
 
             return user.Department.Name;
