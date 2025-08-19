@@ -6,6 +6,7 @@ using ManagementApp.Web.Models;
 
 namespace ManagementApp.Web.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,7 +16,6 @@ namespace ManagementApp.Web.Controllers
             _logger = logger;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult Index()
         {
@@ -26,9 +26,7 @@ namespace ManagementApp.Web.Controllers
 
             return View();
         }
-
-
-        [AllowAnonymous]
+        
         [HttpGet]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int? statusCode = null)

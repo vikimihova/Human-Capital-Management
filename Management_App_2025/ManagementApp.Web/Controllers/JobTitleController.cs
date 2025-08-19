@@ -8,7 +8,7 @@ using static ManagementApp.Common.ApplicationConstants;
 
 namespace ManagementApp.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = AdminRoleName)]
     public class JobTitleController : Controller
     {
         private readonly IJobTitleService jobTitleService;
@@ -18,6 +18,7 @@ namespace ManagementApp.Web.Controllers
             this.jobTitleService = jobTitleService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             // generate view model

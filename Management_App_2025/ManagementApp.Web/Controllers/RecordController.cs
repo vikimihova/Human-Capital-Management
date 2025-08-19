@@ -10,7 +10,8 @@ using ManagementApp.Core.ViewModels.JobTitle;
 using static ManagementApp.Common.ApplicationConstants;
 
 namespace ManagementApp.Web.Controllers
-{    
+{   
+    [Authorize]
     public class RecordController : Controller
     {
         private readonly IRecordService recordService;
@@ -79,7 +80,6 @@ namespace ManagementApp.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> UserRecord()
         {
             // get userId

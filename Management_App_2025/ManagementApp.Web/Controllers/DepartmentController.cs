@@ -8,7 +8,6 @@ using static ManagementApp.Common.ApplicationConstants;
 
 namespace ManagementApp.Web.Controllers
 {
-    [Authorize]
     [Authorize(Roles = AdminRoleName)]
     public class DepartmentController : Controller
     {
@@ -18,7 +17,6 @@ namespace ManagementApp.Web.Controllers
         {
             this.departmentService = departmentService;
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -66,7 +64,6 @@ namespace ManagementApp.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
