@@ -39,7 +39,7 @@ namespace ManagementApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Add()
+        public IActionResult Add()
         {
             AddDepartmentInputModel model = new AddDepartmentInputModel();
 
