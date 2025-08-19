@@ -27,10 +27,28 @@ namespace ManagementApp.Web.Controllers
             return View();
         }
 
+
+        [AllowAnonymous]
+        [HttpGet]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(int? statusCode = null)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (statusCode == 404)
+            {
+                return this.View("PageNotFound");
+            }
+
+            if (statusCode == 400)
+            {
+                return this.View("BadRequest");
+            }
+
+            if (statusCode == 500)
+            {
+                return this.View("InternalServerError");
+            }
+
+            return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

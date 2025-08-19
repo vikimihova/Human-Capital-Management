@@ -99,9 +99,18 @@ namespace ManagementApp.Web
 
             app.UseCookiePolicy();
 
+            // Handle status codes
+            app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
+
+            // Routing          
+            app.MapControllerRoute(
+                name: "Errors",
+                pattern: "{controller=Home}/{action=Index}/{statusCode?}");
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
             app.MapRazorPages();
 
             // SEED ROLES
