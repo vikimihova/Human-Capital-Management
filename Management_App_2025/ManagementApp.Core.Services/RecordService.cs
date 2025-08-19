@@ -94,6 +94,11 @@ namespace ManagementApp.Core.Services
                     .ToList();
             }
 
+            model = model
+                .OrderBy(u => u.FirstName)
+                .ThenBy(u => u.LastName)
+                .ToList();
+
             return model;
         }
 
@@ -396,6 +401,7 @@ namespace ManagementApp.Core.Services
                     Id = r.Id.ToString(),
                     Name = r.Name!
                 })
+                .OrderBy(r => r.Name)
                 .ToArrayAsync();
 
             return roles;

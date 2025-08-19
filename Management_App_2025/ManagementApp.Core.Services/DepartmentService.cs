@@ -30,6 +30,7 @@ namespace ManagementApp.Core.Services
                     EmployeesCount = d.ApplicationUsers.Count,
                     IsDeleted = d.IsDeleted
                 })
+                .OrderBy(d => d.Name)
                 .ToArrayAsync();
 
             return model;
@@ -183,6 +184,7 @@ namespace ManagementApp.Core.Services
                     Id = d.Id.ToString(),
                     Name = d.Name,
                 })
+                .OrderBy(d => d.Name)
                 .ToListAsync();
 
             return model;
