@@ -5,6 +5,7 @@ using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.Department;
 
 using static ManagementApp.Common.ApplicationConstants;
+using static ManagementApp.Common.ErrorMessages.Logging;
 
 namespace ManagementApp.Web.Controllers
 {
@@ -12,10 +13,13 @@ namespace ManagementApp.Web.Controllers
     public class DepartmentController : Controller
     {
         private readonly IDepartmentService departmentService;
+        private readonly ILogger<DepartmentApiController> logger;
 
-        public DepartmentController(IDepartmentService departmentService)
+        public DepartmentController(IDepartmentService departmentService,
+            ILogger<DepartmentApiController> logger)
         {
             this.departmentService = departmentService;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -30,6 +34,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentController)), (nameof(Index))));
                 return BadRequest();
             }
 
@@ -59,6 +64,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentController)), (nameof(Add))));
                 return BadRequest();
             }
 
@@ -76,6 +82,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentController)), (nameof(Edit))));
                 return BadRequest();
             }
 
@@ -97,6 +104,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentController)), (nameof(Edit))));
                 return BadRequest();
             }
 
@@ -114,12 +122,8 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentController)), (nameof(Delete))));
                 return BadRequest();
-            }
-
-            if (!result)
-            {
-                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));
@@ -136,12 +140,8 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentController)), (nameof(Include))));
                 return BadRequest();
-            }
-
-            if (!result)
-            {
-                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));

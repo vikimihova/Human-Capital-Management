@@ -13,7 +13,7 @@ namespace ManagementApp.Common
         public static class Services
         {
             public const string ErrorTryingToObtainService = "Service for {0} cannot be obtained!";
-            public const string ErrorTryingToObtainServiceType = "Service type could not be obtained for the service {0}";
+            public const string ErrorTryingToObtainServiceType = "Service type could not be obtained for the service {0}";            
         }
 
         public static class Seed
@@ -24,6 +24,11 @@ namespace ManagementApp.Common
         public static class UserCreation
         {
             public const string ErrorWhileRegisteringUser = "Error occurred while registering {0} user!";
+        }
+
+        public static class Logging
+        {
+            public const string ErrorLogMessage = "{0}: Error caught in {1}, {2}";
         }
     }
 }

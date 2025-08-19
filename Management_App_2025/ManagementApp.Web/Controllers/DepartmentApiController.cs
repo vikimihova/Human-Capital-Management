@@ -5,6 +5,7 @@ using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.Department;
 
 using static ManagementApp.Common.ApplicationConstants;
+using static ManagementApp.Common.ErrorMessages.Logging;
 
 namespace ManagementApp.Web.Controllers
 {
@@ -26,6 +27,7 @@ namespace ManagementApp.Web.Controllers
         [HttpGet("index")]
         [ProducesResponseType(typeof(IEnumerable<DepartmentViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Index()
         {
             IEnumerable<DepartmentViewModel> model;
@@ -36,7 +38,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, "Error occurred while processing department operation.");
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Index))));
                 return BadRequest();
             }
 
@@ -45,6 +47,7 @@ namespace ManagementApp.Web.Controllers
 
         [HttpGet("add")]
         [ProducesResponseType(typeof(AddDepartmentInputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Add()
         {
             AddDepartmentInputModel model = new AddDepartmentInputModel();
@@ -55,6 +58,7 @@ namespace ManagementApp.Web.Controllers
         [HttpPost("add")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Add([FromBody] AddDepartmentInputModel model)
         {
             if (!ModelState.IsValid)
@@ -65,18 +69,13 @@ namespace ManagementApp.Web.Controllers
             try
             {
                 bool result = await this.departmentService.AddDepartmentAsync(model);
-                if (result == false)
-                {
-                    return BadRequest("Failed to add department to list.");
-                }
-                else
-                {
-                    return Ok();
-                }
+
+                if (!result) return BadRequest();
+                return Ok();
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, "Error occurred while processing department operation.");
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Add))));
                 return BadRequest();
             }
         }
@@ -84,6 +83,7 @@ namespace ManagementApp.Web.Controllers
         [HttpGet("edit/{id}")]
         [ProducesResponseType(typeof(EditDepartmentInputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Edit(string id)
         {
             EditDepartmentInputModel model;
@@ -94,7 +94,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, "Error occurred while processing department operation.");
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Edit))));
                 return BadRequest();
             }
 
@@ -104,6 +104,7 @@ namespace ManagementApp.Web.Controllers
         [HttpPost("edit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Edit([FromBody] EditDepartmentInputModel model)
         {
             if (!ModelState.IsValid)
@@ -114,18 +115,13 @@ namespace ManagementApp.Web.Controllers
             try
             {
                 bool result = await this.departmentService.EditDepartmentAsync(model);
-                if (result == false)
-                {
-                    return BadRequest("Failed to edit department.");
-                }
-                else
-                {                    
-                    return Ok();
-                }
+
+                if (!result) return BadRequest();
+                return Ok();
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, "Error occurred while processing department operation.");
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Edit))));
                 return BadRequest();
             }
         }
@@ -133,6 +129,7 @@ namespace ManagementApp.Web.Controllers
         [HttpDelete("delete/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Delete(string id)
         {
             bool result;
@@ -140,18 +137,13 @@ namespace ManagementApp.Web.Controllers
             try
             {
                 result = await this.departmentService.DeleteDepartmentAsync(id);
-                if (result == false)
-                {
-                    return BadRequest("Failed to delete department.");
-                }
-                else
-                {
-                    return Ok();
-                }
+
+                if (!result) return BadRequest();
+                return Ok();
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, "Error occurred while processing department operation.");
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Delete))));
                 return BadRequest();
             }
         }
@@ -159,6 +151,7 @@ namespace ManagementApp.Web.Controllers
         [HttpPost("include/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Include(string id)
         {
             bool result;
@@ -166,18 +159,13 @@ namespace ManagementApp.Web.Controllers
             try
             {
                 result = await this.departmentService.IncludeDepartmentAsync(id);
-                if (result == false)
-                {
-                    return BadRequest("Failed to include department.");
-                }
-                else
-                {
-                    return Ok();
-                }
+
+                if (!result) return BadRequest();
+                return Ok();
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, "Error occurred while processing department operation.");
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Include))));
                 return BadRequest();
             }
         }

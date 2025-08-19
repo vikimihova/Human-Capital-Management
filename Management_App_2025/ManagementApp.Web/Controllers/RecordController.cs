@@ -8,6 +8,7 @@ using ManagementApp.Core.ViewModels.Department;
 using ManagementApp.Core.ViewModels.JobTitle;
 
 using static ManagementApp.Common.ApplicationConstants;
+using static ManagementApp.Common.ErrorMessages.Logging;
 
 namespace ManagementApp.Web.Controllers
 {   
@@ -17,15 +18,18 @@ namespace ManagementApp.Web.Controllers
         private readonly IRecordService recordService;
         private readonly IDepartmentService departmentService;
         private readonly IJobTitleService jobTitleService;
+        private readonly ILogger<DepartmentApiController> logger;
 
         public RecordController(
             IRecordService recordService,
             IDepartmentService departmentService,
-            IJobTitleService jobTitleService)
+            IJobTitleService jobTitleService,
+            ILogger<DepartmentApiController> logger)
         {
             this.recordService = recordService;
             this.departmentService = departmentService;
             this.jobTitleService = jobTitleService;
+            this.logger = logger;
         }        
 
         [HttpGet]
@@ -40,41 +44,35 @@ namespace ManagementApp.Web.Controllers
             ICollection<SelectDepartmentViewModel> departments;
             ICollection<SelectJobTitleViewModel> jobTitles;
 
-            if (this.User.IsInRole(AdminRoleName))
+            try
             {
-                try
+                if (this.User.IsInRole(AdminRoleName))
                 {
                     users = await this.recordService.Index(userId, inputModel);
                     departments = await this.departmentService.GetDepartmentsAsync();
                     jobTitles = await this.jobTitleService.GetJobTitlesAsync();
-                }
-                catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
-                {
-                    return BadRequest();
-                }
 
-                model.Users = users;
-                model.Departments = departments;
-                model.JobTitles = jobTitles;
-            }
-            else if (this.User.IsInRole(ManagerRoleName))
-            {
-                string departmentName = "";
-
-                try
+                    model.Users = users;
+                    model.Departments = departments;
+                    model.JobTitles = jobTitles;
+                }
+                else if (this.User.IsInRole(ManagerRoleName))
                 {
+                    string departmentName = "";
+
                     users = await this.recordService.GetEmployeesByManager(userId, inputModel);
                     departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(userId);
                     jobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
-                }
-                catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
-                {
-                    return BadRequest();
-                }
 
-                model.Users = users;
-                model.JobTitles= jobTitles;
-            }            
+                    model.Users = users;
+                    model.JobTitles = jobTitles;
+                }
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Index))));
+                return BadRequest();
+            }   
 
             return View("Index", model);
         }
@@ -94,6 +92,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(UserRecord))));
                 return BadRequest();
             }
 
@@ -106,9 +105,17 @@ namespace ManagementApp.Web.Controllers
         {
             AddRecordInputModel model = new AddRecordInputModel();
 
-            model.Departments = await this.departmentService.GetDepartmentsAsync();
-            model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
-            model.Roles = await this.recordService.GetRolesAsync();
+            try
+            {
+                model.Departments = await this.departmentService.GetDepartmentsAsync();
+                model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
+                model.Roles = await this.recordService.GetRolesAsync();
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Add))));
+                return BadRequest();
+            }            
 
             return View(model);
         }
@@ -132,6 +139,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Add))));
                 return BadRequest();
             }
 
@@ -147,27 +155,30 @@ namespace ManagementApp.Web.Controllers
             try
             {
                 model = await this.recordService.GenerateEditRecordInputModelAsync(id);
+
+                if (this.User.IsInRole(AdminRoleName))
+                {
+                    model.Departments = await this.departmentService.GetDepartmentsAsync();
+                    model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
+
+                    return View("EditByAdmin", model);
+                }
+                else if (this.User.IsInRole(ManagerRoleName))
+                {
+                    string managerUserId = this.User.GetUserId()!;
+                    string departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(managerUserId);
+                    model.JobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
+
+                    return View("EditByManager", model);
+                }
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Edit))));
                 return BadRequest();
-            }
+            }     
 
-            if (this.User.IsInRole(AdminRoleName))
-            {
-                model.Departments = await this.departmentService.GetDepartmentsAsync();
-                model.JobTitles = await this.jobTitleService.GetJobTitlesAsync();
-
-                return View("EditByAdmin", model);
-            }
-            else if (this.User.IsInRole(ManagerRoleName))
-            {
-                string managerUserId = this.User.GetUserId()!;
-                string departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(managerUserId);
-                model.JobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
-            }
-
-            return View("EditByManager", model);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -187,7 +198,7 @@ namespace ManagementApp.Web.Controllers
                 {
                     string managerUserId = this.User.GetUserId()!;
                     string departmentName = await this.recordService.GetDepartmentNameByUserIdAsync(managerUserId);
-                    model.JobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);
+                    model.JobTitles = await this.jobTitleService.GetJobTitlesAsync(departmentName);                   
 
                     return View("EditByManager", model);
                 }
@@ -206,6 +217,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Edit))));
                 return BadRequest();
             }
 
@@ -224,12 +236,8 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Delete))));
                 return BadRequest();
-            }
-
-            if (!result)
-            {
-                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));

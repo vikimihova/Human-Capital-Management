@@ -5,6 +5,7 @@ using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.JobTitle;
 
 using static ManagementApp.Common.ApplicationConstants;
+using static ManagementApp.Common.ErrorMessages.Logging;
 
 namespace ManagementApp.Web.Controllers
 {
@@ -12,10 +13,13 @@ namespace ManagementApp.Web.Controllers
     public class JobTitleController : Controller
     {
         private readonly IJobTitleService jobTitleService;
+        private readonly ILogger<DepartmentApiController> logger;
 
-        public JobTitleController(IJobTitleService jobTitleService)
+        public JobTitleController(IJobTitleService jobTitleService,
+            ILogger<DepartmentApiController> logger)
         {
             this.jobTitleService = jobTitleService;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -30,6 +34,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(JobTitleController)), (nameof(Index))));
                 return BadRequest();
             }
 
@@ -59,6 +64,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(JobTitleController)), (nameof(Add))));
                 return BadRequest();
             }
 
@@ -76,6 +82,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(JobTitleController)), (nameof(Edit))));
                 return BadRequest();
             }
 
@@ -97,6 +104,7 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(JobTitleController)), (nameof(Edit))));
                 return BadRequest();
             }
 
@@ -114,12 +122,8 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(JobTitleController)), (nameof(Delete))));
                 return BadRequest();
-            }
-
-            if (!result)
-            {
-                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));
@@ -136,12 +140,8 @@ namespace ManagementApp.Web.Controllers
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(JobTitleController)), (nameof(Include))));
                 return BadRequest();
-            }
-
-            if (!result)
-            {
-                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));
