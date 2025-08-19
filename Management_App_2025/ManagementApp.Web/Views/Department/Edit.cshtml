@@ -5,6 +5,7 @@
     <div class="row">
         <div class="col-md-9 col-sm-6 col-xs-12 min-vw-50">
             <form asp-action="Edit" method="post" asp-antiforgery="true">
+                <input asp-for="@Model.Id" type="hidden" />
                 <div>
                     <label for="Title">Edit Department Name</label>
                     <input asp-for="@Model.Name" class="form-control" />
