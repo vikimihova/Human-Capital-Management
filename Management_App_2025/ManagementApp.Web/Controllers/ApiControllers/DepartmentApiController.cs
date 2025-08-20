@@ -7,7 +7,7 @@ using ManagementApp.Core.ViewModels.Department;
 using static ManagementApp.Common.ApplicationConstants;
 using static ManagementApp.Common.ErrorMessages.Logging;
 
-namespace ManagementApp.Web.Controllers
+namespace ManagementApp.Web.Controllers.ApiControllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -34,11 +34,11 @@ namespace ManagementApp.Web.Controllers
 
             try
             {
-                model = await this.departmentService.Index();
+                model = await departmentService.Index();
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Index))));
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, nameof(DepartmentApiController), nameof(Index)));
                 return BadRequest();
             }
 
@@ -66,18 +66,20 @@ namespace ManagementApp.Web.Controllers
                 return BadRequest(ModelState);
             }
 
+            bool result;
+
             try
             {
-                bool result = await this.departmentService.AddDepartmentAsync(model);
-
-                if (!result) return BadRequest();
-                return Ok();
+                result = await departmentService.AddDepartmentAsync(model);                
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Add))));
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, nameof(DepartmentApiController), nameof(Add)));
                 return BadRequest();
             }
+
+            if (!result) return BadRequest();
+            return Ok();
         }
 
         [HttpGet("edit/{id}")]
@@ -91,11 +93,11 @@ namespace ManagementApp.Web.Controllers
 
             try
             {
-                model = await this.departmentService.GenerateEditDepartmentInputModelAsync(id);
+                model = await departmentService.GenerateEditDepartmentInputModelAsync(id);                
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Edit))));
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, nameof(DepartmentApiController), nameof(Edit)));
                 return BadRequest();
             }
 
@@ -113,18 +115,20 @@ namespace ManagementApp.Web.Controllers
                 return BadRequest(ModelState);
             }
 
+            bool result;
+
             try
             {
-                bool result = await this.departmentService.EditDepartmentAsync(model);
-
-                if (!result) return BadRequest();
-                return Ok();
+                result = await departmentService.EditDepartmentAsync(model);
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Edit))));
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, nameof(DepartmentApiController), nameof(Edit)));
                 return BadRequest();
             }
+
+            if (!result) return BadRequest();
+            return Ok();
         }
 
         [HttpDelete("delete/{id}")]
@@ -137,16 +141,16 @@ namespace ManagementApp.Web.Controllers
 
             try
             {
-                result = await this.departmentService.DeleteDepartmentAsync(id);
-
-                if (!result) return BadRequest();
-                return Ok();
+                result = await departmentService.DeleteDepartmentAsync(id);                
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Delete))));
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, nameof(DepartmentApiController), nameof(Delete)));
                 return BadRequest();
             }
+
+            if (!result) return BadRequest();
+            return Ok();
         }
 
         [HttpPost("include/{id}")]
@@ -159,16 +163,17 @@ namespace ManagementApp.Web.Controllers
 
             try
             {
-                result = await this.departmentService.IncludeDepartmentAsync(id);
-
-                if (!result) return BadRequest();
-                return Ok();
+                result = await departmentService.IncludeDepartmentAsync(id);
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(DepartmentApiController)), (nameof(Include))));
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, nameof(DepartmentApiController), nameof(Include)));
                 return BadRequest();
             }
+
+
+            if (!result) return BadRequest();
+            return Ok();
         }
     }
 }
