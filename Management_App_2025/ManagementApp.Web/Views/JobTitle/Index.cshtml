@@ -32,21 +32,30 @@
 					<tr>
 						<td>@jobTitle.Name</td>
 						<td>@jobTitle.EmployeesCount</td>
-						<td class="text-center">
+						<td class="text-start">
 							@if (jobTitle.IsDeleted == true)
 							{
-								<a class="btn btn-include btn-outline-dark" style="height: 40px; width: 100px;"
-								   asp-action="Include" method="get" asp-route-id="@jobTitle.Id">Include</a>
+								<a id="include-btn-@jobTitle.Id" class="btn btn-include btn-outline-dark" style="height: 40px; width: 100px;"
+								   onclick="includeJobTitle('@jobTitle.Id')">Include</a>
+
+								<a id="edit-btn-@jobTitle.Id" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px; display: none"
+								   asp-action="Edit" method="get" asp-route-id="@jobTitle.Id">Edit</a>
+
+								<a id="delete-btn-@jobTitle.Id" class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px; display: none"
+								   onclick="deleteJobTitle('@jobTitle.Id')">Delete</a>
 							}
 							else
 							{
-								<a class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
+								<a id="include-btn-@jobTitle.Id" class="btn btn-include btn-outline-dark" style="height: 40px; width: 100px; display: none"
+								   onclick="includeJobTitle('@jobTitle.Id')">Include</a>
+
+								<a id="edit-btn-@jobTitle.Id" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
 								   asp-action="Edit" method="get" asp-route-id="@jobTitle.Id">Edit</a>
 
 								@if (jobTitle.EmployeesCount == 0)
 								{
-									<a class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px;"
-									   asp-action="Delete" method="get" asp-route-id="@jobTitle.Id">Delete</a>
+									<a id="delete-btn-@jobTitle.Id" class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px;"
+									   onclick="deleteJobTitle('@jobTitle.Id')">Delete</a>
 								}
 							}
 						</td>
@@ -56,3 +65,43 @@
 		</table>
 	</table>
 </div>
+
+@section Scripts {
+	<script>
+		function deleteJobTitle(id) {
+			$.ajax({
+				url: `/api/jobtitleapi/delete/${id}`,
+				method: 'DELETE',
+				success: function () {
+					const editButton = $(`#edit-btn-${id}`);
+					const deleteButton = $(`#delete-btn-${id}`);
+					const includeButton = $(`#include-btn-${id}`);
+					editButton.hide();
+					deleteButton.hide();
+					includeButton.show();
+				},
+				error: function (xhr) {
+					alert('Failed to delete job title.');
+				}
+			});
+		}
+
+		function includeJobTitle(id) {
+			$.ajax({
+				url: `/api/jobtitleapi/include/${id}`,
+				method: 'POST',
+				success: function () {
+					const editButton = $(`#edit-btn-${id}`);
+					const deleteButton = $(`#delete-btn-${id}`);
+					const includeButton = $(`#include-btn-${id}`);
+					editButton.show();
+					deleteButton.show();
+					includeButton.hide();
+				},
+				error: function (xhr) {
+					alert('Failed to include job title.');
+				}
+			});
+		}
+	</script>
+}

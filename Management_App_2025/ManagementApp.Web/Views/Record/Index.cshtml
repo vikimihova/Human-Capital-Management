@@ -56,7 +56,7 @@
 			<tbody>
 				@foreach (var user in Model.Users)
 				{
-					<tr>
+					<tr id="row-@user.Id">
 						<td>@user.FirstName @user.LastName</td>
 						<td>@user.JobTitle</td>
 						<td>@user.Department</td>
@@ -83,7 +83,7 @@
 								<a class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
 								   asp-action="Edit" method="get" asp-route-id="@user.Id">Edit</a>
 								<a class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px;"
-								   asp-action="Delete" method="get" asp-route-id="@user.Id">Delete</a>
+								   onclick="deleteRecord('@user.Id')">Delete</a>
 							}
 						</td>
 					</tr>
@@ -92,3 +92,21 @@
 		</table>
 	</table>
 </div>
+
+@section Scripts {
+	<script>
+		function deleteRecord(id) {
+			$.ajax({
+				url: `/api/recordapi/delete/${id}`,
+				method: 'DELETE',
+				success: function () {
+					const deleteRow = $(`#row-${id}`);
+					deleteRow.remove();
+				},
+				error: function (xhr) {
+					alert('Failed to delete user record.');
+				}
+			});
+		}
+	</script>
+}
