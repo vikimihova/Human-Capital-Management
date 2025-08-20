@@ -46,6 +46,11 @@ a.text-dark:hover, button.btn-logout:hover {
     transition: background-color 0.3s ease;
 }
 
+.btn-delete:hover {
+    background-color: yellow;
+    color: black;
+}
+
 .btn-include, .btn-add {
     background-color: yellow;
     color: black;
