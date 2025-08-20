@@ -12,10 +12,10 @@ namespace ManagementApp.Web.Controllers
     public class JobTitleController : Controller
     {
         private readonly IJobTitleService jobTitleService;
-        private readonly ILogger<DepartmentApiController> logger;
+        private readonly ILogger<JobTitleController> logger;
 
         public JobTitleController(IJobTitleService jobTitleService,
-            ILogger<DepartmentApiController> logger)
+            ILogger<JobTitleController> logger)
         {
             this.jobTitleService = jobTitleService;
             this.logger = logger;

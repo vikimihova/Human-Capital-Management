@@ -1,8 +1,10 @@
-﻿using ManagementApp.Common.CustomExceptions;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
+using ManagementApp.Common.CustomExceptions;
 using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.Department;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+
 using static ManagementApp.Common.ApplicationConstants;
 using static ManagementApp.Common.ErrorMessages.Logging;
 
@@ -12,10 +14,10 @@ namespace ManagementApp.Web.Controllers
     public class DepartmentController : Controller
     {
         private readonly IDepartmentService departmentService;
-        private readonly ILogger<DepartmentApiController> logger;
+        private readonly ILogger<DepartmentController> logger;
 
         public DepartmentController(IDepartmentService departmentService,
-            ILogger<DepartmentApiController> logger)
+            ILogger<DepartmentController> logger)
         {
             this.departmentService = departmentService;
             this.logger = logger;

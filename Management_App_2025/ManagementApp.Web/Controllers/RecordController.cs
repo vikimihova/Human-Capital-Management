@@ -6,11 +6,10 @@ using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.ApplicationUser;
 using ManagementApp.Core.ViewModels.Department;
 using ManagementApp.Core.ViewModels.JobTitle;
+using ManagementApp.Common.CustomExceptions;
 
 using static ManagementApp.Common.ApplicationConstants;
 using static ManagementApp.Common.ErrorMessages.Logging;
-using ManagementApp.Common.CustomExceptions;
-using AspNetCoreGeneratedDocument;
 
 namespace ManagementApp.Web.Controllers
 {   
@@ -20,13 +19,13 @@ namespace ManagementApp.Web.Controllers
         private readonly IRecordService recordService;
         private readonly IDepartmentService departmentService;
         private readonly IJobTitleService jobTitleService;
-        private readonly ILogger<DepartmentApiController> logger;
+        private readonly ILogger<RecordController> logger;
 
         public RecordController(
             IRecordService recordService,
             IDepartmentService departmentService,
             IJobTitleService jobTitleService,
-            ILogger<DepartmentApiController> logger)
+            ILogger<RecordController> logger)
         {
             this.recordService = recordService;
             this.departmentService = departmentService;
