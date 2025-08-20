@@ -115,6 +115,7 @@ namespace ManagementApp.Core.Services
             // get user
             ApplicationUser? user = await this.userManager
                 .Users
+                .AsNoTracking()
                 .Include(u => u.Department)
                 .FirstOrDefaultAsync(u => u.Id == userGuid);
 
@@ -153,6 +154,7 @@ namespace ManagementApp.Core.Services
             // get user
             ApplicationUser? user = await this.userManager
                 .Users
+                .AsNoTracking()
                 .Include(u => u.Department)
                 .Include(u => u.JobTitle)
                 .FirstOrDefaultAsync(u => u.Id == userGuid);
@@ -259,9 +261,7 @@ namespace ManagementApp.Core.Services
             }
 
             // check if user already exists
-            ApplicationUser? user = await this.userManager
-                .Users
-                .FirstOrDefaultAsync(u => u.Id.ToString() == model.Id);
+            ApplicationUser? user = await this.userManager.FindByIdAsync(model.Id);
 
             if (user == null)
             {
@@ -291,9 +291,7 @@ namespace ManagementApp.Core.Services
             }
 
             // check if user already exists
-            ApplicationUser? user = await this.userManager
-                .Users
-                .FirstOrDefaultAsync(u => u.Id.ToString() == model.Id);
+            ApplicationUser? user = await this.userManager.FindByIdAsync(model.Id);
 
             if (user == null)
             {
@@ -349,7 +347,10 @@ namespace ManagementApp.Core.Services
             }
 
             // check if user exists
-            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+            ApplicationUser? user = await this.userManager
+                .Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
 
             if (user == null)
             {
@@ -402,6 +403,7 @@ namespace ManagementApp.Core.Services
             // get user
             ApplicationUser? user = await this.userManager
                 .Users
+                .AsNoTracking()
                 .Include(u => u.Department)
                 .Include(u => u.JobTitle)
                 .FirstOrDefaultAsync(u => u.Id == userGuid);

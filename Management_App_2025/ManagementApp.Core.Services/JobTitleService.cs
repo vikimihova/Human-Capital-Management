@@ -72,8 +72,6 @@ namespace ManagementApp.Core.Services
 
             // check if jobTitle already exists
             JobTitle? jobTitle = await this.jobTitleRepository
-                .GetAllAttached()
-                .AsNoTracking()
                 .FirstOrDefaultAsync(j => j.Id == jobTitleGuid);
 
             if (jobTitle == null)
@@ -98,7 +96,10 @@ namespace ManagementApp.Core.Services
             }
 
             // check if jobTitle exists
-            JobTitle? jobTitle = await this.jobTitleRepository.FirstOrDefaultAsync(j => j.Id == jobTitleGuid);
+            JobTitle? jobTitle = await this.jobTitleRepository
+                .GetAllAttached()
+                .Include(j => j.ApplicationUsers)
+                .FirstOrDefaultAsync(j => j.Id == jobTitleGuid);
 
             if (jobTitle == null)
             {
@@ -134,7 +135,8 @@ namespace ManagementApp.Core.Services
             }
 
             // check if jobTitle exists
-            JobTitle? jobTitle = await this.jobTitleRepository.FirstOrDefaultAsync(j => j.Id == jobTitleGuid);
+            JobTitle? jobTitle = await this.jobTitleRepository
+                .FirstOrDefaultAsync(j => j.Id == jobTitleGuid);
 
             if (jobTitle == null)
             {

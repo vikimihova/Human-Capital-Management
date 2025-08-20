@@ -71,8 +71,6 @@ namespace ManagementApp.Core.Services
 
             // check if department already exists
             Department? department = await this.departmentRepository
-                .GetAllAttached()
-                .AsNoTracking()
                 .FirstOrDefaultAsync(d => d.Id == departmentGuid);
 
             if (department == null)
@@ -97,7 +95,10 @@ namespace ManagementApp.Core.Services
             }
 
             // check if department exists
-            Department? department = await this.departmentRepository.FirstOrDefaultAsync(d => d.Id == departmentGuid);
+            Department? department = await this.departmentRepository
+                .GetAllAttached()
+                .Include(d => d.ApplicationUsers)
+                .FirstOrDefaultAsync(d => d.Id == departmentGuid);
 
             if (department == null)
             {
@@ -133,7 +134,8 @@ namespace ManagementApp.Core.Services
             }
 
             // check if department exists
-            Department? department = await this.departmentRepository.FirstOrDefaultAsync(d => d.Id == departmentGuid);
+            Department? department = await this.departmentRepository
+                .FirstOrDefaultAsync(d => d.Id == departmentGuid);
 
             if (department == null)
             {
@@ -165,7 +167,10 @@ namespace ManagementApp.Core.Services
             }
 
             // check if department exists
-            Department? department = await this.departmentRepository.GetByIdAsync(departmentGuid);
+            Department? department = await this.departmentRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(d => d.Id == departmentGuid);
 
             if (department == null)
             {
