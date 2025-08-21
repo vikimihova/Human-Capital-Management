@@ -1,9 +1,8 @@
-﻿using ManagementApp.Core.Services;
-using ManagementApp.Core.Services.Interfaces;
-using ManagementApp.Core.ViewModels.Department;
-using ManagementApp.Core.ViewModels.JobTitle;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+
+using ManagementApp.Core.Services.Interfaces;
+using ManagementApp.Core.ViewModels.JobTitle;
 
 using static ManagementApp.Common.ApplicationConstants;
 using static ManagementApp.Common.ErrorMessages.Logging;

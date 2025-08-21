@@ -1,6 +1,5 @@
 ﻿using ManagementApp.Core.ViewModels.ApplicationRole;
 using ManagementApp.Core.ViewModels.ApplicationUser;
-using ManagementApp.Core.ViewModels.JobTitle;
 
 namespace ManagementApp.Core.Services.Interfaces
 {

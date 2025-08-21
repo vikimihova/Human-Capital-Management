@@ -1,5 +1,4 @@
 ﻿using ManagementApp.Core.ViewModels.Department;
-using ManagementApp.Core.ViewModels.JobTitle;
 
 namespace ManagementApp.Core.Services.Interfaces
 {

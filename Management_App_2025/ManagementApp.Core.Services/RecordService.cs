@@ -1,11 +1,10 @@
-﻿using ManagementApp.Common.CustomExceptions;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using ManagementApp.Data.Models;
 using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.ApplicationRole;
 using ManagementApp.Core.ViewModels.ApplicationUser;
-using ManagementApp.Data.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+using ManagementApp.Common.CustomExceptions;
 
 using static ManagementApp.Common.ApplicationConstants;
 using static ManagementApp.Common.ErrorMessages.Roles;

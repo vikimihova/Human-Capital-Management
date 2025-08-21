@@ -1,11 +1,13 @@
-﻿using ManagementApp.Common.CustomExceptions;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
+using ManagementApp.Infrastructure;
 using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.ApplicationUser;
 using ManagementApp.Core.ViewModels.Department;
 using ManagementApp.Core.ViewModels.JobTitle;
-using ManagementApp.Infrastructure;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using ManagementApp.Common.CustomExceptions;
+
 using static ManagementApp.Common.ApplicationConstants;
 using static ManagementApp.Common.ErrorMessages.Logging;
 

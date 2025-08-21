@@ -1,10 +1,9 @@
-﻿using ManagementApp.Common.CustomExceptions;
+﻿using Microsoft.EntityFrameworkCore;
 using ManagementApp.Core.Services.Interfaces;
 using ManagementApp.Core.ViewModels.Department;
 using ManagementApp.Data.Models;
 using ManagementApp.Data.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
+using ManagementApp.Common.CustomExceptions;
 
 namespace ManagementApp.Core.Services
 {
