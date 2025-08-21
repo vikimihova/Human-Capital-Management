@@ -304,6 +304,36 @@ namespace ManagementApp.Core.Services
             return true;
         }
 
+        public async Task<bool> SoftDeleteRecordAsync(string userId)
+        {
+            // check input
+            Guid userGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if user exists
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            // check if user is already soft deleted
+            if (user.IsDeleted == true)
+            {
+                return false;
+            }
+
+            // soft delete user
+            user.IsDeleted = true;
+            await this.userManager.UpdateAsync(user);
+
+            return true;
+        }
+
         public async Task<bool> DeleteRecordAsync(string userId)
         {
             // check input
@@ -321,18 +351,17 @@ namespace ManagementApp.Core.Services
                 return false;
             }
 
-            // check if user is already deleted
-            if (user.IsDeleted == true)
+            // check if user is already soft deleted
+            if (user.IsDeleted == false)
             {
                 return false;
             }
 
-            // soft delete user
-            user.IsDeleted = true;
-            await this.userManager.UpdateAsync(user);
+            // hard delete user
+            await this.userManager.DeleteAsync(user);
 
             return true;
-        }        
+        }
 
         // AUXILIARY
 

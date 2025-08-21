@@ -248,6 +248,29 @@ namespace ManagementApp.Web.Controllers.ApiControllers
             return Ok();
         }
 
+        [HttpPost("remove/{id}")]
+        [Authorize(Roles = AdminRoleName)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Remove(string id)
+        {
+            bool result;
+
+            try
+            {
+                result = await this.recordService.SoftDeleteRecordAsync(id);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Remove))));
+                return BadRequest();
+            }
+
+            if (!result) return BadRequest();
+            return Ok();
+        }
+
         [HttpDelete("delete/{id}")]
         [Authorize(Roles = AdminRoleName)]
         [ProducesResponseType(StatusCodes.Status200OK)]

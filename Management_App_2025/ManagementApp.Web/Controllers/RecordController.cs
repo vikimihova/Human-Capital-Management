@@ -247,17 +247,17 @@ namespace ManagementApp.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = AdminRoleName)]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Remove(string id)
         {
             bool result;
 
             try
             {
-                result = await this.recordService.DeleteRecordAsync(id);
+                result = await this.recordService.SoftDeleteRecordAsync(id);
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Delete))));
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(RecordController)), (nameof(Remove))));
                 return BadRequest();
             }
 
