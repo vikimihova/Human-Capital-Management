@@ -240,7 +240,10 @@ namespace ManagementApp.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
+        // requires a form input
+        // feature currently handled by the ApiController
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = AdminRoleName)]
         public async Task<IActionResult> Delete(string id)
         {
