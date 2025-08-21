@@ -149,7 +149,7 @@ namespace ManagementApp.Core.Services
             }
 
             // check if department has no employees
-            if (department.ApplicationUsers.Any())
+            if (department.ApplicationUsers.Any(u => u.IsDeleted == false))
             {
                 return false;
             }

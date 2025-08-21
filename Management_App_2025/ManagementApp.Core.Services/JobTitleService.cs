@@ -150,7 +150,7 @@ namespace ManagementApp.Core.Services
             }
 
             // check if jobTitle has no employees
-            if (jobTitle.ApplicationUsers.Any())
+            if (jobTitle.ApplicationUsers.Any(u => u.IsDeleted == false))
             {
                 return false;
             }
