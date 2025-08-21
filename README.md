@@ -32,7 +32,7 @@ Searching and filtering functionality is supported.
 
 1. After cloning the repository, update the connection string in appsettings.json as needed.
 2. All required configurations are also located in appsettings.json.
-3. Delete the Migrations folder and add an initial migration to create the database.
+3. Delete the Migrations folder and add an initial migration. Change OnDelete behavior in AspNetUsers for FK Department and FK JobTitle to .NoAction. Create the database.
 4. Run the application. The database will be automatically seeded with roles, users, departments, and job titles.
 - Role names are stored as application constants in the Common layer.
 - User, department, and job title data is stored in a JSON file located in the Data layer under DataProcessor.
