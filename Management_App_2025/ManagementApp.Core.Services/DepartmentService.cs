@@ -104,7 +104,45 @@ namespace ManagementApp.Core.Services
                 return false;
             }
 
-            // check if department already deleted
+            // check if department already soft deleted
+            if (department.IsDeleted == false)
+            {
+                return false;
+            }
+
+            // check if department has no employees
+            if (department.ApplicationUsers.Any())
+            {
+                return false;
+            }
+
+            // hard delete department
+            await this.departmentRepository.DeleteAsync(department);
+
+            return true;
+        }
+
+        public async Task<bool> SoftDeleteDepartmentAsync(string id)
+        {
+            // check input
+            Guid departmentGuid = Guid.Empty;
+            if (!IsGuidValid(id, ref departmentGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if department exists
+            Department? department = await this.departmentRepository
+                .GetAllAttached()
+                .Include(d => d.ApplicationUsers)
+                .FirstOrDefaultAsync(d => d.Id == departmentGuid);
+
+            if (department == null)
+            {
+                return false;
+            }
+
+            // check if department already soft deleted
             if (department.IsDeleted == true)
             {
                 return false;
@@ -141,7 +179,7 @@ namespace ManagementApp.Core.Services
                 return false;
             }
 
-            // check if department already deleted
+            // check if department already soft deleted
             if (department.IsDeleted != true)
             {
                 return false;

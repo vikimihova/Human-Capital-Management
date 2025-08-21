@@ -121,17 +121,17 @@ namespace ManagementApp.Web.Controllers
         // feature currently handled by the ApiController
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Remove(string id)
         {
             bool result;
 
             try
             {
-                result = await this.jobTitleService.DeleteJobTitleAsync(id);
+                result = await this.jobTitleService.SoftDeleteJobTitleAsync(id);
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(JobTitleController)), (nameof(Delete))));
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, (nameof(JobTitleController)), (nameof(Remove))));
                 return BadRequest();
             }
 

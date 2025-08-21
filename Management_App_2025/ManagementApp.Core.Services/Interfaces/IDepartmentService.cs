@@ -11,6 +11,8 @@ namespace ManagementApp.Core.Services.Interfaces
 
         Task<bool> EditDepartmentAsync(EditDepartmentInputModel model);
 
+        Task<bool> SoftDeleteDepartmentAsync(string id);
+
         Task<bool> DeleteDepartmentAsync(string id);
 
         Task<bool> IncludeDepartmentAsync(string id);

@@ -105,7 +105,45 @@ namespace ManagementApp.Core.Services
                 return false;
             }
 
-            // check if jobTitle already deleted
+            // check if jobTitle already soft deleted
+            if (jobTitle.IsDeleted == false)
+            {
+                return false;
+            }
+
+            // check if jobTitle has no employees
+            if (jobTitle.ApplicationUsers.Any())
+            {
+                return false;
+            }
+
+            // hard delete jobTitle
+            await this.jobTitleRepository.DeleteAsync(jobTitle);
+
+            return true;
+        }
+
+        public async Task<bool> SoftDeleteJobTitleAsync(string id)
+        {
+            // check input
+            Guid jobTitleGuid = Guid.Empty;
+            if (!IsGuidValid(id, ref jobTitleGuid))
+            {
+                throw new ArgumentException();
+            }
+
+            // check if jobTitle exists
+            JobTitle? jobTitle = await this.jobTitleRepository
+                .GetAllAttached()
+                .Include(j => j.ApplicationUsers)
+                .FirstOrDefaultAsync(j => j.Id == jobTitleGuid);
+
+            if (jobTitle == null)
+            {
+                return false;
+            }
+
+            // check if jobTitle already soft deleted
             if (jobTitle.IsDeleted == true)
             {
                 return false;
@@ -142,7 +180,7 @@ namespace ManagementApp.Core.Services
                 return false;
             }
 
-            // check if jobTitle already deleted
+            // check if jobTitle already soft deleted
             if (jobTitle.IsDeleted != true)
             {
                 return false;

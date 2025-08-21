@@ -131,21 +131,21 @@ namespace ManagementApp.Web.Controllers.ApiControllers
             return Ok();
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpPost("remove/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Remove(string id)
         {
             bool result;
 
             try
             {
-                result = await departmentService.DeleteDepartmentAsync(id);                
+                result = await departmentService.SoftDeleteDepartmentAsync(id);                
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, nameof(DepartmentApiController), nameof(Delete)));
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, nameof(DepartmentApiController), nameof(Remove)));
                 return BadRequest();
             }
 
@@ -171,6 +171,28 @@ namespace ManagementApp.Web.Controllers.ApiControllers
                 return BadRequest();
             }
 
+
+            if (!result) return BadRequest();
+            return Ok();
+        }
+
+        [HttpDelete("delete/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Delete(string id)
+        {
+            bool result;
+
+            try
+            {
+                result = await departmentService.DeleteDepartmentAsync(id);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                logger.LogError(ex, string.Format(ErrorLogMessage, ex.Message, nameof(DepartmentApiController), nameof(Delete)));
+                return BadRequest();
+            }
 
             if (!result) return BadRequest();
             return Ok();

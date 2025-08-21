@@ -18,6 +18,8 @@ namespace ManagementApp.Core.Services.Interfaces
 
         Task<bool> EditRecordByManagerAsync(EditRecordInputModel model);        
 
+        Task<bool> SoftDeleteRecordAsync(string userId);
+
         Task<bool> DeleteRecordAsync(string userId);
 
 

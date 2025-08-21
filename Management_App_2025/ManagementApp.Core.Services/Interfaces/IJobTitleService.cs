@@ -11,6 +11,8 @@ namespace ManagementApp.Core.Services.Interfaces
 
         Task<bool> EditJobTitleAsync(EditJobTitleInputModel model);
 
+        Task<bool> SoftDeleteJobTitleAsync(string id);
+
         Task<bool> DeleteJobTitleAsync(string id);
 
         Task<bool> IncludeJobTitleAsync(string id);
