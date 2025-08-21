@@ -74,24 +74,35 @@ namespace ManagementApp.Web
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
+            //IMPLEMENT LATER (fix endpoint mapping)
+            //builder.Services.AddEndpointsApiExplorer();
+            //builder.Services.AddSwaggerGen();
+
             // BUILD APPLICATION
             var app = builder.Build();
 
             // CONFIGURE THE HTTP REQUEST PIPELINE   
             if (app.Environment.IsDevelopment())
             {
+                app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
+
+                //IMPLEMENT LATER (fix endpoint mapping)
+                //app.UseSwagger();
+                //app.UseSwaggerUI(c =>
+                //{
+                //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Department API V1");
+                //    c.RoutePrefix = "swagger";
+                //});
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseAuthentication();
