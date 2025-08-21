@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace ManagementApp.Core.ViewModels.Department
+﻿namespace ManagementApp.Core.ViewModels.Department
 {
     public class DepartmentViewModel
     {

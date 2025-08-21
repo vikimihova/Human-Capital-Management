@@ -1,9 +1,8 @@
-﻿using ManagementApp.Core.ViewModels.ApplicationRole;
+﻿using System.ComponentModel.DataAnnotations;
 using ManagementApp.Core.ViewModels.Department;
 using ManagementApp.Core.ViewModels.JobTitle;
-using System.ComponentModel.DataAnnotations;
-using static ManagementApp.Common.EntityValidationConstants.UserValidationConstants;
 
+using static ManagementApp.Common.EntityValidationConstants.UserValidationConstants;
 
 namespace ManagementApp.Core.ViewModels.ApplicationUser
 {
