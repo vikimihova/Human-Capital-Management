@@ -209,8 +209,8 @@ namespace ManagementApp.Core.Services
             ApplicationUser? user = await this.userManager
                 .Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.FirstName == model.FirstName &&
-                                          u.LastName == model.LastName);
+                .FirstOrDefaultAsync(u => u.UserName == model.Username &&
+                                          u.Email == model.Email);
 
             if (user != null)
             {
