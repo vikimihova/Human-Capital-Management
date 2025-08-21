@@ -132,6 +132,7 @@ namespace ManagementApp.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = AdminRoleName)]
         public async Task<IActionResult> Add(AddRecordInputModel model)
         {
@@ -198,6 +199,7 @@ namespace ManagementApp.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = AdminOrManagerRoleName)]
         public async Task<IActionResult> Edit(EditRecordInputModel model)
         {
