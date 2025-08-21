@@ -51,6 +51,20 @@ a.text-dark:hover, button.btn-logout:hover {
     color: black;
 }
 
+.btn-hard-delete {
+    background-color: white;
+    color: red;
+    border: red;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-hard-delete:hover {
+    background-color: red;
+    color: white;
+}
+
 .btn-include, .btn-add {
     background-color: yellow;
     color: black;

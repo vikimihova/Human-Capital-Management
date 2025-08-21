@@ -29,7 +29,7 @@
 			<tbody>
 				@foreach (var department in Model)
 				{
-					<tr>
+					<tr id="row-@department.Id">
 						<td>@department.Name</td>
 						<td>@department.EmployeesCount</td>
 						<td class="text-start">
@@ -38,24 +38,36 @@
 								<a id="include-btn-@department.Id" class="btn btn-include btn-outline-dark" style="height: 40px; width: 100px;"
 								   onclick="includeDepartment('@department.Id')">Include</a>
 
+								<a id="delete-btn-@department.Id" class="btn btn-hard-delete btn-outline-dark" style="height: 40px; width: 100px;"
+								   onclick="deleteDepartment('@department.Id')">Delete</a>
+
+								<a id="hard-delete-btn-@department.Id" class="btn btn-hard-delete btn-outline-dark" style="height: 40px; width: 200px; display: none"
+								   onclick="hardDeleteDepartment('@department.Id')">Delete Permanently?</a>
+
 								<a id="edit-btn-@department.Id" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px; display: none"
 								   asp-action="Edit" method="get" asp-route-id="@department.Id">Edit</a>
 
-								<a id="delete-btn-@department.Id" class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px; display: none"
-								   onclick="deleteDepartment('@department.Id')">Delete</a>
+								<a id="remove-btn-@department.Id" class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px; display: none"
+								   onclick="removeDepartment('@department.Id')">Remove</a>
 							}
 							else
 							{
 								<a id="include-btn-@department.Id" class="btn btn-include btn-outline-dark" style="height: 40px; width: 100px; display: none"
 								   onclick="includeDepartment('@department.Id')">Include</a>
 
+								<a id="delete-btn-@department.Id" class="btn btn-hard-delete btn-outline-dark" style="height: 40px; width: 100px; display: none"
+								   onclick="deleteDepartment('@department.Id')">Delete</a>
+
+								<a id="hard-delete-btn-@department.Id" class="btn btn-hard-delete btn-outline-dark" style="height: 40px; width: 200px; display: none"
+								   onclick="hardDeleteDepartment('@department.Id')">Delete Permanently?</a>
+
 								<a id="edit-btn-@department.Id" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
 								   asp-action="Edit" method="get" asp-route-id="@department.Id">Edit</a>
 
 								@if(department.EmployeesCount == 0)
 								{
-									<a id="delete-btn-@department.Id"  class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px;"
-									onclick="deleteDepartment('@department.Id')">Delete</a>
+									<a id="remove-btn-@department.Id"  class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px;"
+									onclick="removeDepartment('@department.Id')">Remove</a>
 								}
 							}													
 						</td>
@@ -68,20 +80,24 @@
 
 @section Scripts {
 	<script>
-		function deleteDepartment(id) {
+		function removeDepartment(id) {
 			$.ajax({
-				url: `/api/departmentapi/delete/${id}`,
-				method: 'DELETE',
+				url: `/api/departmentapi/remove/${id}`,
+				method: 'POST',
 				success: function () {
 					const editButton = $(`#edit-btn-${id}`);
-					const deleteButton = $(`#delete-btn-${id}`);
+					const removeButton = $(`#remove-btn-${id}`);
 					const includeButton = $(`#include-btn-${id}`);
+					const deleteButton = $(`#delete-btn-${id}`);
+					const hardDeleteButton = $(`#hard-delete-btn-${id}`);
 					editButton.hide();
-					deleteButton.hide();
+					removeButton.hide();
 					includeButton.show();
+					deleteButton.show();
+					hardDeleteButton.hide();
 				},
 				error: function (xhr) {
-					alert('Failed to delete department');
+					alert('Failed to remove department');
 				}
 			});
 		}
@@ -92,14 +108,45 @@
 				method: 'POST',
 				success: function () {
 					const editButton = $(`#edit-btn-${id}`);
-					const deleteButton = $(`#delete-btn-${id}`);
+					const removeButton = $(`#remove-btn-${id}`);
 					const includeButton = $(`#include-btn-${id}`);
+					const deleteButton = $(`#delete-btn-${id}`);
+					const hardDeleteButton = $(`#hard-delete-btn-${id}`);
 					editButton.show();
-					deleteButton.show();
+					removeButton.show();
 					includeButton.hide();
+					deleteButton.hide();
+					hardDeleteButton.hide();
 				},
 				error: function (xhr) {
 					alert('Failed to include department');
+				}
+			});
+		}
+
+		function deleteDepartment(id) {
+			const editButton = $(`#edit-btn-${id}`);
+			const removeButton = $(`#remove-btn-${id}`);
+			const includeButton = $(`#include-btn-${id}`);
+			const deleteButton = $(`#delete-btn-${id}`);
+			const hardDeleteButton = $(`#hard-delete-btn-${id}`);
+			editButton.hide();
+			removeButton.hide();
+			includeButton.show();
+			deleteButton.hide();
+			hardDeleteButton.show();
+		}
+
+		function hardDeleteDepartment(id) {
+			$.ajax({
+				url: `/api/departmentapi/delete/${id}`,
+				method: 'DELETE',
+				success: function () {
+					const deleteRow = $(`#row-${id}`);
+					deleteRow.remove();
+				},
+				error: function (xhr) {
+					alert('Failed to delete department.');
 				}
 			});
 		}

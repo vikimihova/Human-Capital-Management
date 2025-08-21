@@ -29,7 +29,7 @@
 			<tbody>
 				@foreach (var jobTitle in Model)
 				{
-					<tr>
+					<tr id="row-@jobTitle.Id">
 						<td>@jobTitle.Name</td>
 						<td>@jobTitle.EmployeesCount</td>
 						<td class="text-start">
@@ -38,24 +38,36 @@
 								<a id="include-btn-@jobTitle.Id" class="btn btn-include btn-outline-dark" style="height: 40px; width: 100px;"
 								   onclick="includeJobTitle('@jobTitle.Id')">Include</a>
 
+								<a id="delete-btn-@jobTitle.Id" class="btn btn-hard-delete btn-outline-dark" style="height: 40px; width: 100px;"
+								   onclick="deleteJobTitle('@jobTitle.Id')">Delete</a>
+
+								<a id="hard-delete-btn-@jobTitle.Id" class="btn btn-hard-delete btn-outline-dark" style="height: 40px; width: 200px; display: none"
+								   onclick="hardDeleteJobTitle('@jobTitle.Id')">Delete Permanently?</a>
+
 								<a id="edit-btn-@jobTitle.Id" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px; display: none"
 								   asp-action="Edit" method="get" asp-route-id="@jobTitle.Id">Edit</a>
 
-								<a id="delete-btn-@jobTitle.Id" class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px; display: none"
-								   onclick="deleteJobTitle('@jobTitle.Id')">Delete</a>
+								<a id="remove-btn-@jobTitle.Id" class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px; display: none"
+								   onclick="removeJobTitle('@jobTitle.Id')">Remove</a>
 							}
 							else
 							{
 								<a id="include-btn-@jobTitle.Id" class="btn btn-include btn-outline-dark" style="height: 40px; width: 100px; display: none"
 								   onclick="includeJobTitle('@jobTitle.Id')">Include</a>
 
+								<a id="delete-btn-@jobTitle.Id" class="btn btn-hard-delete btn-outline-dark" style="height: 40px; width: 100px; display: none"
+								   onclick="deleteJobTitle('@jobTitle.Id')">Delete</a>
+
+								<a id="hard-delete-btn-@jobTitle.Id" class="btn btn-hard-delete btn-outline-dark" style="height: 40px; width: 200px; display: none"
+								   onclick="hardDeleteJobTitle('@jobTitle.Id')">Delete Permanently?</a>
+
 								<a id="edit-btn-@jobTitle.Id" class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
 								   asp-action="Edit" method="get" asp-route-id="@jobTitle.Id">Edit</a>
 
 								@if (jobTitle.EmployeesCount == 0)
 								{
-									<a id="delete-btn-@jobTitle.Id" class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px;"
-									   onclick="deleteJobTitle('@jobTitle.Id')">Delete</a>
+									<a id="remove-btn-@jobTitle.Id" class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px;"
+									   onclick="removeJobTitle('@jobTitle.Id')">Remove</a>
 								}
 							}
 						</td>
@@ -68,20 +80,24 @@
 
 @section Scripts {
 	<script>
-		function deleteJobTitle(id) {
+		function removeJobTitle(id) {
 			$.ajax({
-				url: `/api/jobtitleapi/delete/${id}`,
-				method: 'DELETE',
+				url: `/api/jobtitleapi/remove/${id}`,
+				method: 'POST',
 				success: function () {
 					const editButton = $(`#edit-btn-${id}`);
-					const deleteButton = $(`#delete-btn-${id}`);
+					const removeButton = $(`#remove-btn-${id}`);
 					const includeButton = $(`#include-btn-${id}`);
+					const deleteButton = $(`#delete-btn-${id}`);
+					const hardDeleteButton = $(`#hard-delete-btn-${id}`);
 					editButton.hide();
-					deleteButton.hide();
+					removeButton.hide();
 					includeButton.show();
+					deleteButton.show();
+					hardDeleteButton.hide();
 				},
 				error: function (xhr) {
-					alert('Failed to delete job title.');
+					alert('Failed to remove job title.');
 				}
 			});
 		}
@@ -92,14 +108,45 @@
 				method: 'POST',
 				success: function () {
 					const editButton = $(`#edit-btn-${id}`);
-					const deleteButton = $(`#delete-btn-${id}`);
+					const removeButton = $(`#remove-btn-${id}`);
 					const includeButton = $(`#include-btn-${id}`);
+					const deleteButton = $(`#delete-btn-${id}`);
+					const hardDeleteButton = $(`#hard-delete-btn-${id}`);
 					editButton.show();
-					deleteButton.show();
+					removeButton.show();
 					includeButton.hide();
+					deleteButton.hide();
+					hardDeleteButton.hide();
 				},
 				error: function (xhr) {
 					alert('Failed to include job title.');
+				}
+			});
+		}
+
+		function deleteJobTitle(id) {
+			const editButton = $(`#edit-btn-${id}`);
+			const removeButton = $(`#remove-btn-${id}`);
+			const includeButton = $(`#include-btn-${id}`);
+			const deleteButton = $(`#delete-btn-${id}`);
+			const hardDeleteButton = $(`#hard-delete-btn-${id}`);
+			editButton.hide();
+			removeButton.hide();
+			includeButton.show();
+			deleteButton.hide();
+			hardDeleteButton.show();
+		}
+
+		function hardDeleteJobTitle(id) {
+			$.ajax({
+				url: `/api/jobtitleapi/delete/${id}`,
+				method: 'DELETE',
+				success: function () {
+					const deleteRow = $(`#row-${id}`);
+					deleteRow.remove();
+				},
+				error: function (xhr) {
+					alert('Failed to delete job title.');
 				}
 			});
 		}

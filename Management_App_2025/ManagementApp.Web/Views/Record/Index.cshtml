@@ -83,7 +83,7 @@
 								<a class="btn btn-custom btn-outline-dark" style="height: 40px; width: 100px;"
 								   asp-action="Edit" method="get" asp-route-id="@user.Id">Edit</a>
 								<a class="btn btn-delete btn-outline-dark" style="height: 40px; width: 100px;"
-								   onclick="deleteRecord('@user.Id')">Delete</a>
+								   onclick="removeRecord('@user.Id')">Remove</a>
 							}
 						</td>
 					</tr>
@@ -95,16 +95,16 @@
 
 @section Scripts {
 	<script>
-		function deleteRecord(id) {
+		function removeRecord(id) {
 			$.ajax({
-				url: `/api/recordapi/delete/${id}`,
-				method: 'DELETE',
+				url: `/api/recordapi/remove/${id}`,
+				method: 'POST',
 				success: function () {
 					const deleteRow = $(`#row-${id}`);
 					deleteRow.remove();
 				},
 				error: function (xhr) {
-					alert('Failed to delete user record.');
+					alert('Failed to remove user record.');
 				}
 			});
 		}
